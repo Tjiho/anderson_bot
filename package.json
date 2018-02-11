@@ -1,0 +1,29 @@
+{
+  "name": "anderson_bot",
+  "version": "0.0.1",
+  "description": "telegram bot",
+  "main": "bot.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tjiho/anderson_bot.git"
+  },
+  "keywords": [
+    "bot",
+    "telegram",
+    "anderson"
+  ],
+  "author": "",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/Tjiho/anderson_bot/issues"
+  },
+  "homepage": "https://github.com/Tjiho/anderson_bot#readme"
+}
