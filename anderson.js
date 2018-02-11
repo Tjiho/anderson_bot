@@ -4,8 +4,8 @@ var anderson = {};
 
 anderson.getMsg = function(message,first_name,last_name,channel)
 {
-	
-	anderson.sendMsg("yop",channel);
+	if(message == "yop")	
+		anderson.sendMsg("yop",channel);
 }
 
 anderson.sendMsg = function(message,channel)
