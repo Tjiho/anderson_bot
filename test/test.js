@@ -52,3 +52,33 @@ describe('#isForHour', function() {
         Assert.equal(Anderson.isForHour("anno 1404 est un super jeu"),false);    
     });
 })})
+
+
+// ------ test for who/what ---------
+describe('anderson', function() {
+describe('#whatIsIt', function() {
+    it('should return Barack Obama - qui est Barack Obama?', function() 
+    {
+        Assert.equal(Anderson.whatIsIt("qui est Barack Obama?"),"Barack Obama");    
+    });
+    it('should return Accordéon - c\'est quoi un accordéon?', function() 
+    {
+        Assert.equal(Anderson.whatIsIt("c'est quoi un accordéon?"),'Accordéon');    
+    });
+    it('should return Voiture - c\'est quoi une voiture?', function() 
+    {
+        Assert.equal(Anderson.whatIsIt("c'est quoi une voiture?"),'Voiture');    
+    });
+    it('should return Accordéon - c quoi un accordéon?', function() 
+    {
+        Assert.equal(Anderson.whatIsIt("c quoi un accordéon?"),'Accordéon');    
+    });
+    it('should return null - il est gentil hein? !', function() 
+    {
+        Assert.equal(Anderson.whatIsIt("il est gentil hein?"),null);    
+    });
+    it('should return null - anno 1404 est un super jeu', function() 
+    {
+        Assert.equal(Anderson.whatIsIt("anno 1404 est un super jeu"),null);    
+    });
+})})

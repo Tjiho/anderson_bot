@@ -5,9 +5,11 @@ var anderson = {};
 
 anderson.getMsg = function(message,first_name,last_name,channel)
 {
-	console.log(anderson.isForHour(message))
+	what = anderson.whatIsIt(message)
 	if(message == "yop")	
 		anderson.sendMsg("yop",channel)
+	else if(what != null)
+		anderson.sendDecription(what)
 	else if(anderson.isForHour(message))
 		anderson.sendHour(channel)
 	else if(anderson.isQuestion(message))
@@ -23,6 +25,29 @@ anderson.sendHour = function(channel)
 	message = "il est "+ h + " heure " + m;
 	//console.log(message);
 	anderson.sendMsg(message,channel)
+}
+
+anderson.sendDecription = function(word,channel)
+{
+	Request.get(
+		{
+			'uri':'https://www.wikidata.org/w/api.php?action=wbgetentities&sites=frwiki&titles='+word+'&format=json&props=descriptions' , 
+			'encoding':'utf-8'
+		},
+		function (error, response, body) 
+		{
+  			if (!error && response.statusCode == 200) {
+				resJson = JSON.parse(body)
+				id = Object.keys(resJson.entities)[0]
+				description = resJson.entities[id].descriptions.fr.value
+				anderson.sendMsg(resJson.entities[id].descriptions.fr.value,channel)
+  			}
+			else
+			{
+				console.log("toto")
+			}
+		}
+	)
 }
 
 anderson.sendMsg = function(message,channel)
@@ -95,6 +120,14 @@ function applyRulesAnd(ele,list_rules)
 	return res
 }
 
+const toTitleCase = (phrase) => {
+	return phrase
+	  .split(' ')
+	  .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+	  .join(' ');
+  };
+
+
 //test if message seems to be a question
 anderson.isQuestion = function(message)
 {
@@ -113,6 +146,27 @@ anderson.isQuestion = function(message)
 	)
 
 	return applyRulesOr(message.split(" "),rules)
+}
+
+anderson.whatIsIt = function(message)
+{
+	//ex : qui est steve jobs?
+	regex = RegExp("qui est (.*)\\?")
+	res = regex.exec(message)
+	if(res != null)
+	{
+		return toTitleCase(res[1].trim())
+	}
+
+	//ex : c'est quoi un|une accordéon? , c quoi ... 
+	regex = RegExp("c(?:'est)? quoi une? (.*)\\?")
+	res = regex.exec(message)
+	if(res != null)
+	{
+		return toTitleCase(res[1].trim())
+	}
+	
+	return null
 }
 
 anderson.isForHour = function(message)
@@ -137,4 +191,5 @@ anderson.isForHour = function(message)
 	return applyRulesAnd(message.split(" "),rules)
 }
 
+requestWiki("Accordéon",null)
 module.exports = anderson;
