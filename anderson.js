@@ -5,10 +5,22 @@ var anderson = {};
 anderson.getMsg = function(message,first_name,last_name,channel)
 {
 	if(message == "yop")	
-		anderson.sendMsg("yop",channel);
+		anderson.sendMsg("yop",channel)
+	else if(aderson.isForHour(message))
+		anderson.sendHour(channel)
 	else if(anderson.isQuestion(message))
 		anderson.sendMsg("oui oui certainement",channel)
 }
+
+anderson.sendHour = function(channel)
+{
+	var d = new Date();
+    var h = addZero(d.getHours());
+    var m = addZero(d.getMinutes());
+	message = "il doit être "+ h + " heure " + m;
+	anderson.sendMsg(message,channel)
+}
+
 anderson.sendMsg = function(message,channel)
 {
 	Request('https://api.telegram.org/'+Config.botKey+'/sendMessage?chat_id='+channel+'&text='+message, 
@@ -19,6 +31,13 @@ anderson.sendMsg = function(message,channel)
   			}
 		}
 	)
+}
+
+function addZero(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
 }
 
 //search if <word> match with one of words in <list_words_search>
@@ -82,6 +101,28 @@ anderson.isQuestion = function(message)
 	)
 
 	return applyRulesOr(message.split(" "),rules)
+}
+
+anderson.isForHour = function(message)
+{
+	var rules = []
+	rules.push((list_words) => 
+		wordInYourMessage(list_words,["quelle","quel"])
+	)
+
+	rules.push((list_words) => 
+		wordInYourMessage(list_words,["heure"])
+	)
+
+	rules.push((list_words) => 
+		wordInYourMessage(list_words,["est"])
+	)
+
+	rules.push((list_words) => 
+		wordInYourMessage(list_words,["il"])
+	)
+
+	return applyRulesAnd(message.split(" "),rules)
 }
 
 module.exports = anderson;
