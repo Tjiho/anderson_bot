@@ -10,7 +10,7 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 	if(message == "yop" )	
 		anderson.sendMsg("yop",channel)
 	else if(what != null)
-		anderson.sendDecription(what,channel)
+		anderson.sendDecription(what,channel,"fr")
 	else if(anderson.isForHour(message))
 		anderson.sendHour(channel)
 	else if(anderson.isQuestion(message) && anderson.isMe(message))
@@ -30,11 +30,11 @@ anderson.sendHour = function(channel)
 	anderson.sendMsg(message,channel)
 }
 
-anderson.sendDecription = function(word,channel)
+anderson.sendDecription = function(word,channel,lang)
 {
 	Request.get(
 		{
-			'uri':'https://www.wikidata.org/w/api.php?action=wbgetentities&sites=frwiki&titles='+word+'&format=json&props=descriptions' , 
+			'uri':'https://www.wikidata.org/w/api.php?action=wbgetentities&sites='+lang+'wiki&titles='+word+'&format=json&props=descriptions' , 
 			'encoding':'utf-8'
 		},
 		function (error, response, body) 
@@ -49,7 +49,13 @@ anderson.sendDecription = function(word,channel)
   				}
 				catch(err)
 				{
-					anderson.sendMsg("je sais pas",channel)
+					if(lang == 'fr')
+					{
+						anderson.sendDecription(word,channel,'en')
+					}
+					else
+						anderson.sendMsg("je sais pas",channel)
+
 				}
 			}
 			else
