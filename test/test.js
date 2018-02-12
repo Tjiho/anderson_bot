@@ -57,9 +57,9 @@ describe('#isForHour', function() {
 // ------ test for who/what ---------
 describe('anderson', function() {
 describe('#whatIsIt', function() {
-    it('should return Barack Obama - qui est Barack Obama?', function() 
+    it('should return Barack Obama - qui est Barack_Obama?', function() 
     {
-        Assert.equal(Anderson.whatIsIt("qui est Barack Obama?"),"Barack Obama");    
+        Assert.equal(Anderson.whatIsIt("qui est Barack Obama?"),"Barack_Obama");    
     });
     it('should return Accordéon - c\'est quoi un accordéon?', function() 
     {

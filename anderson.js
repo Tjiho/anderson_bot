@@ -6,15 +6,16 @@ var anderson = {};
 anderson.getMsg = function(message,first_name,last_name,channel)
 {
 	what = anderson.whatIsIt(message)
+	message = message.toLowerCase()
 	if(message == "yop" )	
 		anderson.sendMsg("yop",channel)
 	else if(what != null)
 		anderson.sendDecription(what,channel)
 	else if(anderson.isForHour(message))
 		anderson.sendHour(channel)
-	else if(anderson.isQuestion(message))
+	else if(anderson.isQuestion(message) && anderson.isMe(message))
 		anderson.sendMsg("oui oui certainement",channel)
-	else if(anderson.isMe(message))
+	else if(anderson.isMe(message) && anderson.hello(message))
 		anderson.sendMsg("bonjour !",channel)
 }
 
@@ -61,9 +62,10 @@ anderson.sendDecription = function(word,channel)
 
 anderson.sendMsg = function(message,channel)
 {
-	Request.get(
+	Request.post(
 		{
-			'uri':'https://api.telegram.org/'+Config.botKey+'/sendMessage?chat_id='+channel+'&text='+message, 
+			'uri':'https://api.telegram.org/'+Config.botKey+'/sendMessage', 
+			form:{"chat_id":channel,"text":message},
 			'encoding':'utf-8',
 			headers: {
     				"Content-Type":"application/json; charset=utf-8"
@@ -170,6 +172,17 @@ anderson.isMe = function(message)
 
 	return applyRulesOr(message.split(" "),rules)
 }
+
+anderson.hello = function(message)
+{
+	var rules = []
+	rules.push((list_words) =>
+		wordInYourMessage(list_words,["bonjour","hey","salut"])
+	)
+
+	return applyRulesOr(message.split(" "),rules)
+}
+
 
 anderson.whatIsIt = function(message)
 {
