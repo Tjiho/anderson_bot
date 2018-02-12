@@ -33,7 +33,7 @@ describe('anderson', function() {
 describe('#isForHour', function() {
     it('should return true - quelle heure est t il?', function() 
     {
-        Assert.equal(Anderson.isForHour("quel heure est t il"),true);    
+        Assert.equal(Anderson.isForHour("quel heure est t il?"),true);    
     });
     it('should return true - bon, il est quelle heure', function() 
     {

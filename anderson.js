@@ -1,12 +1,14 @@
 const Request = require("request");
 const Config = require("./config");
+const Log = require("./log");
 var anderson = {};
 
 anderson.getMsg = function(message,first_name,last_name,channel)
 {
+	console.log(anderson.isForHour(message))
 	if(message == "yop")	
 		anderson.sendMsg("yop",channel)
-	else if(aderson.isForHour(message))
+	else if(anderson.isForHour(message))
 		anderson.sendHour(channel)
 	else if(anderson.isQuestion(message))
 		anderson.sendMsg("oui oui certainement",channel)
@@ -14,21 +16,31 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 
 anderson.sendHour = function(channel)
 {
+	console.log("yop");
 	var d = new Date();
-    var h = addZero(d.getHours());
-    var m = addZero(d.getMinutes());
-	message = "il doit être "+ h + " heure " + m;
+    	var h = addZero(d.getHours());
+    	var m = addZero(d.getMinutes());
+	message = "il est "+ h + " heure " + m;
+	//console.log(message);
 	anderson.sendMsg(message,channel)
 }
 
 anderson.sendMsg = function(message,channel)
 {
-	Request('https://api.telegram.org/'+Config.botKey+'/sendMessage?chat_id='+channel+'&text='+message, 
+	Request.get(
+		{
+			'uri':'https://api.telegram.org/'+Config.botKey+'/sendMessage?chat_id='+channel+'&text='+message, 
+			'encoding':'utf-8'
+		},
 		function (error, response, body) 
 		{
   			if (!error && response.statusCode == 200) {
     				console.log("yey")
   			}
+			else
+			{
+				Log.error(body);
+			}
 		}
 	)
 }
@@ -111,15 +123,15 @@ anderson.isForHour = function(message)
 	)
 
 	rules.push((list_words) => 
-		wordInYourMessage(list_words,["heure"])
+		wordInYourMessage(list_words,["heure","heure?"])
 	)
 
 	rules.push((list_words) => 
-		wordInYourMessage(list_words,["est"])
+		wordInYourMessage(list_words,["est","est?"])
 	)
 
 	rules.push((list_words) => 
-		wordInYourMessage(list_words,["il"])
+		wordInYourMessage(list_words,["il","il?"])
 	)
 
 	return applyRulesAnd(message.split(" "),rules)
