@@ -9,7 +9,7 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 	if(message == "yop")	
 		anderson.sendMsg("yop",channel)
 	else if(what != null)
-		anderson.sendDecription(what)
+		anderson.sendDecription(what,channel)
 	else if(anderson.isForHour(message))
 		anderson.sendHour(channel)
 	else if(anderson.isQuestion(message))
@@ -38,10 +38,17 @@ anderson.sendDecription = function(word,channel)
 		{
   			if (!error && response.statusCode == 200) {
 				resJson = JSON.parse(body)
-				id = Object.keys(resJson.entities)[0]
-				description = resJson.entities[id].descriptions.fr.value
-				anderson.sendMsg(resJson.entities[id].descriptions.fr.value,channel)
-  			}
+				try
+				{
+					id = Object.keys(resJson.entities)[0]
+					description = resJson.entities[id].descriptions.fr.value
+					anderson.sendMsg(description,channel)
+  				}
+				catch(err)
+				{
+					anderson.sendMsg("ca existe pas",channel)
+				}
+			}
 			else
 			{
 				console.log("toto")
@@ -191,5 +198,4 @@ anderson.isForHour = function(message)
 	return applyRulesAnd(message.split(" "),rules)
 }
 
-requestWiki("Accordéon",null)
 module.exports = anderson;
