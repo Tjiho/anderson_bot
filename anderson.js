@@ -42,7 +42,7 @@ anderson.sendDecription = function(word,channel)
 				{
 					id = Object.keys(resJson.entities)[0]
 					description = resJson.entities[id].descriptions.fr.value
-					anderson.sendMsg(description,channel)
+					anderson.sendMsg("'"+description+"'",channel)
   				}
 				catch(err)
 				{
@@ -62,7 +62,10 @@ anderson.sendMsg = function(message,channel)
 	Request.get(
 		{
 			'uri':'https://api.telegram.org/'+Config.botKey+'/sendMessage?chat_id='+channel+'&text='+message, 
-			'encoding':'utf-8'
+			'encoding':'utf-8',
+			headers: {
+    				"Content-Type":"application/json; charset=utf-8"
+  			}
 		},
 		function (error, response, body) 
 		{
@@ -148,9 +151,9 @@ anderson.isQuestion = function(message)
 		(list_words) => message.indexOf("?") > -1
 	)
 
-	rules.push(
+	/*rules.push(
 		(list_words) => isYourWord(["je","tu","il","nous","vous","ils"],list_words[1])
-	)
+	)*/
 
 	return applyRulesOr(message.split(" "),rules)
 }
@@ -162,7 +165,7 @@ anderson.whatIsIt = function(message)
 	res = regex.exec(message)
 	if(res != null)
 	{
-		return toTitleCase(res[1].trim())
+		return toTitleCase(res[1].trim()).replace(" ","_")
 	}
 
 	//ex : c'est quoi un|une accordéon? , c quoi ... 
