@@ -159,7 +159,7 @@ anderson.isQuestion = function(message)
 		(list_words) => isYourWord(["je","tu","il","nous","vous","ils"],list_words[1])
 	)*/
 
-	return applyRulesOr(message.split(" "),rules)
+	return applyRulesOr(message.split(/\.|\?|,|'|-| /),rules)
 }
 
 anderson.isMe = function(message)
@@ -170,17 +170,17 @@ anderson.isMe = function(message)
 		wordInYourMessage(list_words,["anderson","andy","@aurea_bot"])
 	)
 
-	return applyRulesOr(message.split(" "),rules)
+	return applyRulesOr(message.split(/\.|!|\?|,|'|-| /),rules)
 }
 
 anderson.hello = function(message)
 {
 	var rules = []
 	rules.push((list_words) =>
-		wordInYourMessage(list_words,["bonjour","hey","salut"])
+		wordInYourMessage(list_words,["bonjour","hey","salut","hello","coucou"])
 	)
 
-	return applyRulesOr(message.split(" "),rules)
+	return applyRulesOr(message.split(/\.|!|\?|,|'|-| /),rules)
 }
 
 
@@ -195,11 +195,24 @@ anderson.whatIsIt = function(message)
 	}
 
 	//ex : c'est quoi un|une accordéon? , c quoi ... 
-	regex = RegExp("c(?:'est)? quoi une? (.*)\\?")
+	regex = RegExp("c(?:'est)? quoi (?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)\\?")
 	res = regex.exec(message)
 	if(res != null)
 	{
-		return toTitleCase(res[1].trim())
+		
+		
+		res = toTitleCase(res[1].trim()).replace(" ","_")
+		if(res[res.length - 1] == "s")
+			return res.slice(0, -1); 
+		else
+			return res
+	}
+
+	regex = RegExp("c(?:'est)? qui (.*)\\?")
+	res = regex.exec(message)
+	if(res != null)
+	{
+		return toTitleCase(res[1].trim()).replace(" ","_")
 	}
 	
 	return null
@@ -224,7 +237,7 @@ anderson.isForHour = function(message)
 		wordInYourMessage(list_words,["il","il?"])
 	)
 
-	return applyRulesAnd(message.split(" "),rules)
+	return applyRulesAnd(message.split(/\.|!|\?|,|'|-| /),rules)
 }
 
 module.exports = anderson;
