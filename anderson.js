@@ -7,7 +7,7 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 	if(message == "yop")	
 		anderson.sendMsg("yop",channel);
 	else(anderson.isQuestion(message))
-		sendMsg("hum... bonne question")
+		anderson.sendMsg("hum... bonne question")
 }
 
 anderson.sendMsg = function(message,channel)
