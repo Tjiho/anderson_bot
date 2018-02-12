@@ -6,7 +6,7 @@ var anderson = {};
 anderson.getMsg = function(message,first_name,last_name,channel)
 {
 	what = anderson.whatIsIt(message)
-	if(message == "yop")	
+	if(message == "yop" )	
 		anderson.sendMsg("yop",channel)
 	else if(what != null)
 		anderson.sendDecription(what,channel)
@@ -14,6 +14,8 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 		anderson.sendHour(channel)
 	else if(anderson.isQuestion(message))
 		anderson.sendMsg("oui oui certainement",channel)
+	else if(anderson.isMe(message))
+		anderson.sendMsg("bonjour !",channel)
 }
 
 anderson.sendHour = function(channel)
@@ -154,6 +156,17 @@ anderson.isQuestion = function(message)
 	/*rules.push(
 		(list_words) => isYourWord(["je","tu","il","nous","vous","ils"],list_words[1])
 	)*/
+
+	return applyRulesOr(message.split(" "),rules)
+}
+
+anderson.isMe = function(message)
+{
+	var rules = []
+	
+	rules.push((list_words) => 
+		wordInYourMessage(list_words,["anderson","andy","@aurea_bot"])
+	)
 
 	return applyRulesOr(message.split(" "),rules)
 }
