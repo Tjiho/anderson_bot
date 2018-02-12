@@ -6,10 +6,9 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 {
 	if(message == "yop")	
 		anderson.sendMsg("yop",channel);
-	else(anderson.isQuestion(message))
+	else if(anderson.isQuestion(message))
 		anderson.sendMsg("hum... bonne question",channel)
 }
-
 anderson.sendMsg = function(message,channel)
 {
 	Request('https://api.telegram.org/'+Config.botKey+'/sendMessage?chat_id='+channel+'&text="'+message+'"', 
