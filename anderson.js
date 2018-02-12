@@ -16,7 +16,7 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 	else if(anderson.isQuestion(message) && anderson.isMe(message))
 		anderson.sendMsg("oui oui certainement",channel)
 	else if(anderson.isMe(message) && anderson.hello(message))
-		anderson.sendMsg("bonjour !",channel)
+		anderson.sendMsg("yo !",channel)
 }
 
 anderson.sendHour = function(channel)
@@ -49,7 +49,7 @@ anderson.sendDecription = function(word,channel)
   				}
 				catch(err)
 				{
-					anderson.sendMsg("ca existe pas",channel)
+					anderson.sendMsg("je sais pas",channel)
 				}
 			}
 			else
@@ -195,7 +195,7 @@ anderson.whatIsIt = function(message)
 	}
 
 	//ex : c'est quoi un|une accordéon? , c quoi ... 
-	regex = RegExp("c(?:'est)? quoi (?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)\\?")
+	regex = RegExp("c(?:'est)? (?:quoi|koi) (?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)\\?")
 	res = regex.exec(message)
 	if(res != null)
 	{
@@ -208,7 +208,7 @@ anderson.whatIsIt = function(message)
 			return res
 	}
 
-	regex = RegExp("c(?:'est)? qui (.*)\\?")
+	regex = RegExp("c(?:'est)? (?:qui|ki) (.*)\\?")
 	res = regex.exec(message)
 	if(res != null)
 	{
