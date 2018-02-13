@@ -201,7 +201,7 @@ anderson.whatIsIt = function(message)
 	}
 
 	//ex : c'est quoi un|une accordéon? , c quoi ... 
-	regex = RegExp("c(?:'est)? (?:quoi|koi) (?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)\\?")
+	regex = RegExp("c(?:'est)? (?:quoi|koi) (?:la)?(?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)\\?")
 	res = regex.exec(message)
 	if(res != null)
 	{
