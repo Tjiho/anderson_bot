@@ -34,7 +34,8 @@ anderson.sendDecription = function(word,channel,lang)
 {
 	Request.get(
 		{
-			'uri':'https://www.wikidata.org/w/api.php?action=wbgetentities&sites='+lang+'wiki&titles='+word+'&format=json&props=descriptions' , 
+			'uri':'https://www.wikidata.org/w/api.php?action=wbsearchentities&search='+word+'&language='+lang+'&format=json',
+			//'uri':'https://www.wikidata.org/w/api.php?action=wbgetentities&sites='+lang+'wiki&titles='+word+'&format=json&props=descriptions' , 
 			'encoding':'utf-8'
 		},
 		function (error, response, body) 
@@ -43,18 +44,17 @@ anderson.sendDecription = function(word,channel,lang)
 				resJson = JSON.parse(body)
 				try
 				{
-					id = Object.keys(resJson.entities)[0]
-					description = resJson.entities[id].descriptions.fr.value
-					anderson.sendMsg("'"+description+"'",channel)
+					/*id = Object.keys(resJson.entities)[0]
+					description = resJson.entities[id].descriptions.fr.value*/
+
+					datas = resJson.search.forEach(element => {
+						let description = element.description
+						anderson.sendMsg("'"+description+"'",channel)
+					});
+					
   				}
 				catch(err)
 				{
-					if(lang == 'fr')
-					{
-						anderson.sendDecription(word,channel,'en')
-					}
-					else
-						anderson.sendMsg("je sais pas",channel)
 
 				}
 			}
