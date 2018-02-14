@@ -73,6 +73,11 @@ describe('#whatIsIt', function() {
     {
         Assert.equal(Anderson.whatIsIt("c'est quoi une voiture?"),'Voiture');    
     });
+    
+    it('should return Café - c quoi le café?', function() 
+    {
+        Assert.equal(Anderson.whatIsIt("c quoi le café?"),'Café');    
+    });
     it('should return Accordéon - c quoi un accordéon?', function() 
     {
         Assert.equal(Anderson.whatIsIt("c quoi un accordéon?"),'Accordéon');    

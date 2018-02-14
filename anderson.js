@@ -5,8 +5,9 @@ var anderson = {};
 
 anderson.getMsg = function(message,first_name,last_name,channel)
 {
-	what = anderson.whatIsIt(message)
 	message = message.toLowerCase()
+	what = anderson.whatIsIt(message)
+
 	if(message == "yop" )	
 		anderson.sendMsg("yop",channel)
 	else if(what != null)
@@ -48,8 +49,15 @@ anderson.sendDecription = function(word,channel,lang)
 					description = resJson.entities[id].descriptions.fr.value*/
 
 					datas = resJson.search.forEach(element => {
-						let description = element.description
-						anderson.sendMsg("'"+description+"'",channel)
+						if(element.match.language == "fr")
+						{
+							if("description" in element)
+							{
+								let description = element.description
+								if(description != 'Wikimedia disambiguation page')
+									anderson.sendMsg("'"+description+"'",channel)
+							}
+						}
 					});
 					
   				}
@@ -201,7 +209,7 @@ anderson.whatIsIt = function(message)
 	}
 
 	//ex : c'est quoi un|une accordéon? , c quoi ... 
-	regex = RegExp("c(?:'est)? (?:quoi|koi) (?:la)?(?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)\\?")
+	regex = RegExp("c(?:'est)? (?:quoi|koi) (?:le)?(?:la)?(?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)\\?")
 	res = regex.exec(message)
 	if(res != null)
 	{
