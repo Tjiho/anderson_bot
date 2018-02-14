@@ -35,7 +35,7 @@ anderson.sendDecription = function(word,channel,lang)
 {
 	Request.get(
 		{
-			'uri':'https://www.wikidata.org/w/api.php?action=wbsearchentities&search='+word+'&language='+lang+'&format=json',
+			'uri':'https://www.wikidata.org/w/api.php?action=wbsearchentities&search='+word+'&language='+lang+'&format=json&limit=30',
 			//'uri':'https://www.wikidata.org/w/api.php?action=wbgetentities&sites='+lang+'wiki&titles='+word+'&format=json&props=descriptions' , 
 			'encoding':'utf-8'
 		},
