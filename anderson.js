@@ -34,15 +34,15 @@ anderson.sendHour = function(channel)
 
 anderson.sendDecription = function(word,channel,lang)
 {
-	Wikidata.searchElement("chaise")
+	Wikidata.searchElement(word)
 	.then((data) => 
 	{
 		data.forEach(element => {
 			element.getLabel("fr").then((label) =>
 			{
-				getDescription("fr").then((description) =>
+				element.getDescription("fr").then((description) =>
 				{
-					anderson.sendMsg(label+" :"+description,channel)
+					anderson.sendMsg(label+" : "+description,channel)
 				})
 			})
 		});
