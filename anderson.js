@@ -1,6 +1,7 @@
 const Request = require("request");
 const Config = require("./config");
 const Log = require("./log");
+const Wikidata = require("./wikidata");
 var anderson = {};
 
 anderson.getMsg = function(message,first_name,last_name,channel)
@@ -33,45 +34,23 @@ anderson.sendHour = function(channel)
 
 anderson.sendDecription = function(word,channel,lang)
 {
-	Request.get(
-		{
-			'uri':'https://www.wikidata.org/w/api.php?action=wbsearchentities&search='+word+'&language='+lang+'&format=json&limit=30',
-			//'uri':'https://www.wikidata.org/w/api.php?action=wbgetentities&sites='+lang+'wiki&titles='+word+'&format=json&props=descriptions' , 
-			'encoding':'utf-8'
-		},
-		function (error, response, body) 
-		{
-  			if (!error && response.statusCode == 200) {
-				resJson = JSON.parse(body)
-				try
-				{
-					/*id = Object.keys(resJson.entities)[0]
-					description = resJson.entities[id].descriptions.fr.value*/
-
-					datas = resJson.search.forEach(element => {
-						if(element.match.language == "fr")
-						{
-							if("description" in element)
-							{
-								let description = element.description
-								if(description != 'Wikimedia disambiguation page')
-									anderson.sendMsg("'"+description+"'",channel)
-							}
-						}
-					});
-					
-  				}
-				catch(err)
-				{
-
-				}
-			}
-			else
+	Wikidata.searchElement("chaise")
+	.then((data) => 
+	{
+		data.forEach(element => {
+			element.getLabel("fr").then((label) =>
 			{
-				console.log("toto")
-			}
-		}
-	)
+				getDescription("fr").then((description) =>
+				{
+					anderson.sendMsg(label+" :"+description,channel)
+				})
+			})
+		});
+	})
+	.catch((error) =>
+	{
+		console.log(error)
+	})
 }
 
 anderson.sendMsg = function(message,channel)

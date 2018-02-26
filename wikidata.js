@@ -18,11 +18,78 @@ Wikidata proxy :
 wikidata.instance = function(id)
 {
 	this.id = id;
+	this.cache = null
 
 	this.getProperty = function(property)
 	{
 		return "toto"
 	}
+
+	this.getLabel = function(lang)
+	{
+		return new Promise((resolve, reject) => 
+		{
+			this.requestEntity()
+				.then((data) =>
+				{
+					resolve(data.labels[lang].value)
+				})
+		})
+	}
+
+	this.getDescription = function(lang)
+	{
+		return new Promise((resolve, reject) => 
+		{
+			this.requestEntity()
+				.then((data) =>
+				{
+					resolve(data.descriptions[lang].value)
+				})
+		})
+	}
+
+	//do request to get the entity
+	this.requestEntity = function()
+	{
+		var options = {
+			uri: 'https://www.wikidata.org/w/api.php',
+			qs: {
+				action: 'wbgetentities',
+				ids: this.id,
+				format: 'json'
+			},
+			headers: {
+				'User-Agent': 'Anderson-bot/0.1 request-promise'
+			},
+			json: true // Automatically parses the JSON string in the response
+		}
+
+		return new Promise((resolve, reject) => 
+		{
+			if(this.cache != null)
+				resolve(this.cache)
+			else
+			{
+				rp(options)
+					.then((data) => 
+					{
+						if("entities" in data)
+							if(this.id in data.entities)
+							{
+								this.cache = data.entities[this.id]
+								resolve(this.cache)
+							}
+							else
+								reject("api error")
+						else
+							reject("api error")
+					})
+			}
+		})
+
+	}
+	//https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q42&format=jsonfm
 }
 
 wikidata.searchElement = function(name,lang = "fr")
@@ -70,19 +137,27 @@ wikidata.searchElement = function(name,lang = "fr")
 				}
 				
 			})
-	});
+	})
 }
 
-
+/*
 wikidata.searchElement("chaise")
 	.then((data) => 
 	{
-		console.log(data)
+		data[0].getLabel("fr").then((data) =>
+		{
+			console.log(data)
+		})
+
+		data[0].getDescription("fr").then((data) =>
+		{
+			console.log(data)
+		})
 	})
 	.catch((error) =>
 	{
 		console.log(error)
 	})
-
+*/
 
 module.exports = wikidata;
