@@ -37,7 +37,7 @@ anderson.sendHour = function(channel)
 
 anderson.sendDecription = function(word,channel,lang)
 {
-	Wikidata.searchElement("chaise")
+	Wikidata.searchElement(word)
 	.then((data) => 
 	{
 		list_promises = data.map(anderson.applyDescription)
