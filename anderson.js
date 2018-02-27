@@ -1,4 +1,4 @@
-import { utimesSync } from "fs";
+//import { utimesSync } from "fs";
 
 const Request = require("request");
 const Config = require("./config");
@@ -37,7 +37,7 @@ anderson.sendHour = function(channel)
 
 anderson.sendDecription = function(word,channel,lang)
 {
-	Wikidata.searchElement(word)
+	Wikidata.searchElement(word.toLowerCase())
 	.then((data) => 
 	{
 		list_promises = data.map(anderson.applyDescription)
@@ -69,9 +69,9 @@ anderson.applyDescription = function(wikidata_element)
 	{
 		wikidata_element.getLabel("fr").then((label) =>
 		{
-			getDescription("fr").then((description) =>
+			wikidata_element.getDescription("fr").then((description) =>
 			{
-				resolve(label+" :"+description,channel)
+				resolve(label+" :"+description)
 			})
 			.catch((error) =>
 			{
