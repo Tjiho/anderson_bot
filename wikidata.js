@@ -1,7 +1,9 @@
-const rp = require('request-promise');
+const Rp = require('request-promise');
 const Config = require("./config");
 const Log = require("./log");
+const Utils = require("./utils");
 var wikidata = {};
+
 
 
 /*
@@ -32,7 +34,13 @@ wikidata.instance = function(id)
 			this.requestEntity()
 				.then((data) =>
 				{
-					resolve(data.labels[lang].value)
+					try{
+						resolve(data.labels[lang].value)
+					}
+					catch(error)
+					{
+						resolve("[vide]")
+					}
 				})
 		})
 	}
@@ -44,7 +52,14 @@ wikidata.instance = function(id)
 			this.requestEntity()
 				.then((data) =>
 				{
-					resolve(data.descriptions[lang].value)
+					try{
+						resolve(data.descriptions[lang].value)
+					}
+					catch(error)
+					{
+						resolve("[vide]")
+					}
+					
 				})
 		})
 	}
@@ -71,7 +86,7 @@ wikidata.instance = function(id)
 				resolve(this.cache)
 			else
 			{
-				rp(options)
+				Rp(options)
 					.then((data) => 
 					{
 						if("entities" in data)
@@ -109,55 +124,75 @@ wikidata.searchElement = function(name,lang = "fr")
 		json: true // Automatically parses the JSON string in the response
 	};
 
+	//check if we keep the result or not
+	var validElement = function(element)
+	{
+		return new Promise((resolve, reject) => 
+		{
+			if(element.match.language == lang)
+				if("description" in element) // we keep just element with a description
+					if(element.description != 'Wikimedia disambiguation page') // and we eject some result
+					{
+						let instance = new wikidata.instance(element.id)
+						instance.getLabel(lang).then((label) =>
+						{
+							if(label.toLowerCase().indexOf(name) > -1)
+								resolve(instance)
+							else
+								reject("not valid")
+						})
+					}
+					else
+						reject("not valid")
+				else
+					reject("not valid")
+			else
+				reject("not valid")					
+		})
+	}
+
 	var list_instances = []
 
 	return new Promise((resolve, reject) => 
 	{
-		rp(options)
-			.then((data) => 
+		Rp(options).then((data) => 
+		{
+			if("search" in data)
 			{
-				//console.log(data);
-				if("search" in data)
-				{
-					data.search.forEach(element => {
-						if(element.match.language == lang)
-						{
-							if("description" in element) // we keep just element with a description
-							{
-								if(element.description != 'Wikimedia disambiguation page') // and we eject some result
-									list_instances.push(new wikidata.instance(element.id))
-							}
-						}
-					});
-					resolve(list_instances)
-				}
-				else
-				{
-					reject("api error")
-				}
+
+				var actions = data.search.map(validElement)
+
 				
-			})
+
+				Utils.promisesToArray(actions)
+				.then(results => resolve(results)) // Then ["Resolved!", "Rejected!"]
+				.catch(err => reject(err));
+			}
+			else
+			{
+				reject("api error")
+			}				
+		})
 	})
 }
 
 /*
-wikidata.searchElement("chaise")
-	.then((data) => 
-	{
-		data[0].getLabel("fr").then((data) =>
+wikidata.searchElement("pierre").then((data) => 
+{
+	//console.log(data)
+	data.forEach(element => {
+		element.getLabel("fr").then((label) =>
 		{
-			console.log(data)
+			element.getDescription("fr").then((description) =>
+			{
+				console.log(label+" :"+description)
+			})
 		})
-
-		data[0].getDescription("fr").then((data) =>
-		{
-			console.log(data)
-		})
-	})
-	.catch((error) =>
-	{
-		console.log(error)
-	})
-*/
+	});
+})
+.catch((error) =>
+{
+	console.log(error)
+})*/
 
 module.exports = wikidata;

@@ -1,7 +1,10 @@
+import { utimesSync } from "fs";
+
 const Request = require("request");
 const Config = require("./config");
 const Log = require("./log");
 const Wikidata = require("./wikidata");
+const Utils = require("./utils");
 var anderson = {};
 
 anderson.getMsg = function(message,first_name,last_name,channel)
@@ -37,19 +40,49 @@ anderson.sendDecription = function(word,channel,lang)
 	Wikidata.searchElement("chaise")
 	.then((data) => 
 	{
-		data.forEach(element => {
-			element.getLabel("fr").then((label) =>
-			{
-				getDescription("fr").then((description) =>
-				{
-					anderson.sendMsg(label+" :"+description,channel)
-				})
+		list_promises = data.map(anderson.applyDescription)
+		Utils.promisesToArray(list_promises)
+		.then((results) =>  
+		{
+			var rep = ""
+			results.forEach(element => {
+				rep += element + "\n"
 			})
-		});
+			anderson.sendMsg(rep,channel)
+
+		})
+		.catch((error) =>
+		{
+			console.log(error)
+		})
 	})
 	.catch((error) =>
 	{
 		console.log(error)
+	})
+}
+
+
+anderson.applyDescription = function(wikidata_element)
+{
+	return new Promise((resolve, reject) => 
+	{
+		wikidata_element.getLabel("fr").then((label) =>
+		{
+			getDescription("fr").then((description) =>
+			{
+				resolve(label+" :"+description,channel)
+			})
+			.catch((error) =>
+			{
+				reject(error)
+			})
+		})
+		.catch((error) =>
+		{
+			reject(error)
+		})
+		
 	})
 }
 
