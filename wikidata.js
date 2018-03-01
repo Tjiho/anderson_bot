@@ -17,17 +17,43 @@ Wikidata proxy :
 
 */
 
-wikidata.instance = function(id)
-{
-	this.id = id;
-	this.cache = null
 
-	this.getProperty = function(property)
+class Instance//function(id)
+{
+
+	static constructWithCache(id)
+	{
+		if(this.cache_instance === undefined)
+		{
+			this.cache_instance = {}
+		}
+
+		if(id in this.cache_instance)
+		{
+			return this.cache_instance[id]
+		}
+		else
+		{
+			let instance = new Instance(id)
+			this.cache_instance[id] = instance
+			return instance
+		}
+	}
+
+	constructor(id)
+	{
+		this.id = id
+		this.cache = null
+		this.claims = {}
+		
+	}
+
+	getProperty(property)
 	{
 		return "toto"
 	}
 
-	this.getLabel = function(lang)
+	getLabel (lang)
 	{
 		return new Promise((resolve, reject) => 
 		{
@@ -45,7 +71,7 @@ wikidata.instance = function(id)
 		})
 	}
 
-	this.getDescription = function(lang)
+	getDescription(lang)
 	{
 		return new Promise((resolve, reject) => 
 		{
@@ -63,9 +89,9 @@ wikidata.instance = function(id)
 				})
 		})
 	}
-
+	
 	//do request to get the entity
-	this.requestEntity = function()
+	requestEntity()
 	{
 		var options = {
 			uri: 'https://www.wikidata.org/w/api.php',
@@ -107,6 +133,10 @@ wikidata.instance = function(id)
 	//https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q42&format=jsonfm
 }
 
+
+wikidata.instance = Instance
+
+
 wikidata.searchElement = function(name,lang = "fr")
 {
 	var options = {
@@ -133,7 +163,7 @@ wikidata.searchElement = function(name,lang = "fr")
 				if("description" in element) // we keep just element with a description
 					if(element.description != 'Wikimedia disambiguation page') // and we eject some result
 					{
-						let instance = new wikidata.instance(element.id)
+						let instance = wikidata.instance.constructWithCache(element.id)
 						instance.getLabel(lang).then((label) =>
 						{
 							if(label.toLowerCase().indexOf(name) > -1)
