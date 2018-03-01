@@ -17,8 +17,8 @@ Wikidata proxy :
 
 */
 
-
-class Instance//function(id)
+//represent a wikidataElement
+class Instance
 {
 
 	static constructWithCache(id)
@@ -48,15 +48,33 @@ class Instance//function(id)
 		
 	}
 
+	getPropertyById(id)
+	{
+		return new Promise((resolve, reject) => 
+		{
+			
+			this.getClaimByid(id)
+				.then((data) =>
+				{
+					resolve(this.claims[id])	
+				})
+				.catch((error) =>
+				{
+					reject(error)
+				})
+		})
+	}
+
 	getProperty(property)
 	{
 		return "toto"
 	}
 
-	getLabel (lang)
+	getLabel (lang = "fr")
 	{
 		return new Promise((resolve, reject) => 
 		{
+			
 			this.requestEntity()
 				.then((data) =>
 				{
@@ -71,7 +89,7 @@ class Instance//function(id)
 		})
 	}
 
-	getDescription(lang)
+	getDescription(lang = "fr")
 	{
 		return new Promise((resolve, reject) => 
 		{
@@ -85,11 +103,68 @@ class Instance//function(id)
 					{
 						resolve("[vide]")
 					}
-					
+				})
+				.catch((data) =>
+				{
+					resolve("[vide]")
 				})
 		})
 	}
 	
+
+	getClaimByid(id,lang = "fr")
+	{
+		return new Promise((resolve, reject) => 
+		{
+			this.requestEntity().then((data) =>
+			{
+				let list_claim = data.claims
+				if(id in list_claim)
+				{
+					try
+					{
+						let claim_type = list_claim[id][0].mainsnak.datavalue.type
+						
+						// let claim_entity = instance.constructWithCache(id)
+						if(claim_type == "string")
+						{
+							this.claims[id] = list_claim[id][0].mainsnak.datavalue.value
+							resolve(id)
+						}
+						else if(claim_type == "wikibase-entityid")
+						{
+							
+							let info_entity = Instance.constructWithCache(list_claim[id][0].mainsnak.datavalue.value.id)
+							info_entity.getLabel(lang).then((label) =>
+							{
+								this.claims[id] = label
+								resolve(id)
+							})
+						}
+						else
+						{
+							reject("claim - not implemented")
+						}
+					}
+					catch(error)
+					{
+						reject("cannot access claim info " + error)
+					}
+				}
+				else
+				{
+					reject("claim not found")
+				}
+			})
+			.catch((error) =>
+			{
+				reject(error)
+			})
+				
+		})
+	}
+
+
 	//do request to get the entity
 	requestEntity()
 	{
@@ -136,7 +211,8 @@ class Instance//function(id)
 
 wikidata.instance = Instance
 
-
+//do a search on the wikidata api
+//return a list of <Instance> which match with the name searched
 wikidata.searchElement = function(name,lang = "fr")
 {
 	var options = {
@@ -154,7 +230,7 @@ wikidata.searchElement = function(name,lang = "fr")
 		json: true // Automatically parses the JSON string in the response
 	};
 
-	//check if we keep the result or not
+	//get a search element and check if it's valid with the search
 	var validElement = function(element)
 	{
 		return new Promise((resolve, reject) => 
@@ -206,7 +282,24 @@ wikidata.searchElement = function(name,lang = "fr")
 	})
 }
 
-/*
+wikidata.is_human = function(instance)
+{
+	return new Promise((resolve, reject) => 
+	{
+		instance.getPropertyById("P31").then((instance_of) =>
+		{
+			if(instance_of == "être humain")
+				resolve(instance)
+			else
+				reject("not human")
+		})
+		.catch((error) =>
+		{
+			reject("not human")
+		})
+	})
+}
+
 wikidata.searchElement("pierre").then((data) => 
 {
 	//console.log(data)
@@ -215,7 +308,15 @@ wikidata.searchElement("pierre").then((data) =>
 		{
 			element.getDescription("fr").then((description) =>
 			{
-				console.log(label+" :"+description)
+				
+				wikidata.is_human(element).then((a) =>
+				{
+					console.log("[h]" +label+" :"+description)
+				})
+				.catch((error) =>
+				{
+					console.log("[O]" +label+" :"+description)
+				})
 			})
 		})
 	});
@@ -223,6 +324,6 @@ wikidata.searchElement("pierre").then((data) =>
 .catch((error) =>
 {
 	console.log(error)
-})*/
+})
 
 module.exports = wikidata;
