@@ -11,11 +11,12 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 {
 	message = message.toLowerCase()
 	what = anderson.whatIsIt(message)
+	who = anderson.whoIsIt(message)
 
 	if(message == "yop" )	
 		anderson.sendMsg("yop",channel)
-	else if(what != null)
-		anderson.sendDecription(what,channel,"fr")
+	else if(who != null)
+		anderson.sendDecription(what,channel,"fr",Wikidata.is_human)
 	else if(anderson.isForHour(message))
 		anderson.sendHour(channel)
 	else if(anderson.isQuestion(message) && anderson.isMe(message))
@@ -35,7 +36,7 @@ anderson.sendHour = function(channel)
 	anderson.sendMsg(message,channel)
 }
 
-anderson.sendDecription = function(word,channel,lang)
+anderson.sendDecription = function(word,channel,lang,checkfunction)
 {
 	Wikidata.searchElement(word.toLowerCase())
 	.then((data) => 
@@ -44,11 +45,18 @@ anderson.sendDecription = function(word,channel,lang)
 		Utils.promisesToArray(list_promises)
 		.then((results) =>  
 		{
-			var rep = ""
-			results.forEach(element => {
-				rep += element + "\n"
+			Utils.promisesToArray(results.map(checkfunction)).then((results) =>  
+			{
+				var rep = ""
+				results.forEach(element => {
+					rep += element + "\n"
+				})
+				anderson.sendMsg(rep,channel)
 			})
-			anderson.sendMsg(rep,channel)
+			.catch((error) =>
+			{
+				console.log(error)
+			})	
 
 		})
 		.catch((error) =>
@@ -212,13 +220,6 @@ anderson.hello = function(message)
 
 anderson.whatIsIt = function(message)
 {
-	//ex : qui est steve jobs?
-	regex = RegExp("qui est (.*)\\?")
-	res = regex.exec(message)
-	if(res != null)
-	{
-		return toTitleCase(res[1].trim()).replace(" ","_")
-	}
 
 	//ex : c'est quoi un|une accordéon? , c quoi ... 
 	regex = RegExp("c(?:'est)? (?:quoi|koi) (?:le)?(?:la)?(?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)\\?")
@@ -232,6 +233,19 @@ anderson.whatIsIt = function(message)
 			return res.slice(0, -1); 
 		else
 			return res
+	}
+
+	return null
+}
+
+anderson.whoIsIt = function(message)
+{
+	//ex : qui est steve jobs?
+	regex = RegExp("qui est (.*)\\?")
+	res = regex.exec(message)
+	if(res != null)
+	{
+		return toTitleCase(res[1].trim()).replace(" ","_")
 	}
 
 	regex = RegExp("c(?:'est)? (?:qui|ki) (.*)\\?")

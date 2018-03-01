@@ -299,7 +299,7 @@ wikidata.is_human = function(instance)
 		})
 	})
 }
-
+/*
 wikidata.searchElement("pierre").then((data) => 
 {
 	//console.log(data)
@@ -325,5 +325,5 @@ wikidata.searchElement("pierre").then((data) =>
 {
 	console.log(error)
 })
-
+*/
 module.exports = wikidata;
