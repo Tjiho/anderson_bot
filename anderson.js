@@ -16,7 +16,7 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 	if(message == "yop" )	
 		anderson.sendMsg("yop",channel)
 	else if(who != null)
-		anderson.sendDecription(what,channel,"fr",Wikidata.is_human)
+		anderson.sendDecription(who,channel,"fr",Wikidata.is_human)
 	else if(anderson.isForHour(message))
 		anderson.sendHour(channel)
 	else if(anderson.isQuestion(message) && anderson.isMe(message))
@@ -41,11 +41,10 @@ anderson.sendDecription = function(word,channel,lang,checkfunction)
 	Wikidata.searchElement(word.toLowerCase())
 	.then((data) => 
 	{
-		list_promises = data.map(anderson.applyDescription)
-		Utils.promisesToArray(list_promises)
-		.then((results) =>  
+		Utils.promisesToArray(data.map(checkfunction)).then((data) =>  
 		{
-			Utils.promisesToArray(results.map(checkfunction)).then((results) =>  
+			list_promises = data.map(anderson.applyDescription)
+			Utils.promisesToArray(list_promises).then((results) =>
 			{
 				var rep = ""
 				results.forEach(element => {
@@ -62,7 +61,7 @@ anderson.sendDecription = function(word,channel,lang,checkfunction)
 		.catch((error) =>
 		{
 			console.log(error)
-		})
+		})	
 	})
 	.catch((error) =>
 	{
