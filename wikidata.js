@@ -282,7 +282,7 @@ wikidata.searchElement = function(name,lang = "fr")
 	})
 }
 
-wikidata.is_human = function(instance)
+wikidata.isHuman = function(instance)
 {
 	return new Promise((resolve, reject) => 
 	{
@@ -299,31 +299,54 @@ wikidata.is_human = function(instance)
 		})
 	})
 }
-/*
+
+wikidata.isNotHuman = function(instance)
+{
+	return new Promise((resolve, reject) => 
+	{
+		instance.getPropertyById("P31").then((instance_of) =>
+		{
+			if(instance_of == "être humain")
+				reject("human")
+			else
+				resolve(instance)
+		})
+		.catch((error) =>
+		{
+			reject("not human")
+		})
+	})
+}
+
 wikidata.searchElement("pierre").then((data) => 
 {
 	//console.log(data)
-	data.forEach(element => {
-		element.getLabel("fr").then((label) =>
-		{
-			element.getDescription("fr").then((description) =>
+	Utils.promisesToArray(data.map(wikidata.isNotHuman)).then((data) =>  
+	{
+		data.forEach(element => {
+			element.getLabel("fr").then((label) =>
 			{
-				
-				wikidata.is_human(element).then((a) =>
+				element.getDescription("fr").then((description) =>
 				{
-					console.log("[h]" +label+" :"+description)
-				})
-				.catch((error) =>
-				{
-					console.log("[O]" +label+" :"+description)
+					
+					wikidata.isHuman(element).then((a) =>
+					{
+						console.log("[h]" +label+" :"+description)
+					})
+					.catch((error) =>
+					{
+						console.log("[O]" +label+" :"+description)
+					})
 				})
 			})
-		})
-	});
+		});
+	})
+	
+
 })
 .catch((error) =>
 {
 	console.log(error)
 })
-*/
+
 module.exports = wikidata;
