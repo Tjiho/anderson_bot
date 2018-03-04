@@ -58,13 +58,36 @@ describe('#isForHour', function() {
 })})
 
 
+// ------ test for who ---------
+describe('anderson', function() {
+    describe('#whoIsIt', function() {
+        it('should return Barack_Obama - qui est Barack Obama?', function() 
+        {
+            Assert.equal(Anderson.whoIsIt("qui est Barack Obama?"),"Barack_Obama");    
+        });
+        it('should return Steve_Jobs - c qui steve jobs ?', function() 
+        {
+            Assert.equal(Anderson.whoIsIt("c qui steve jobs ?"),'Steve_Jobs');    
+        });
+        it('should return null - c quoi du canard?', function() 
+        {
+            Assert.equal(Anderson.whoIsIt("c quoi du canard?"),null);    
+        });
+        it('should return null - il est gentil hein? !', function() 
+        {
+            Assert.equal(Anderson.whoIsIt("il est gentil hein?"),null);    
+        });
+        it('should return null - anno 1404 est un super jeu', function() 
+        {
+            Assert.equal(Anderson.whoIsIt("anno 1404 est un super jeu"),null);    
+        });
+    })})
+
+
 // ------ test for who/what ---------
 describe('anderson', function() {
 describe('#whatIsIt', function() {
-    it('should return Barack_Obama - qui est Barack Obama?', function() 
-    {
-        Assert.equal(Anderson.whatIsIt("qui est Barack Obama?"),"Barack_Obama");    
-    });
+  
     it('should return Accordéon - c\'est quoi un accordéon?', function() 
     {
         Assert.equal(Anderson.whatIsIt("c'est quoi un accordéon?"),'Accordéon');    
@@ -82,10 +105,6 @@ describe('#whatIsIt', function() {
     {
         Assert.equal(Anderson.whatIsIt("c quoi un accordéon?"),'Accordéon');    
     });
-    it('should return Steve_Jobs - c qui steve jobs ?', function() 
-    {
-        Assert.equal(Anderson.whatIsIt("c qui steve jobs ?"),'Steve_Jobs');    
-    });
     it('should return Canard - c quoi du canard?', function() 
     {
         Assert.equal(Anderson.whatIsIt("c quoi du canard?"),'Canard');    
@@ -93,6 +112,10 @@ describe('#whatIsIt', function() {
     it('should return Méduse - c quoi des méduses ?', function() 
     {
         Assert.equal(Anderson.whatIsIt("c quoi des méduses ?"),'Méduse');    
+    });
+    it('should return null - qui est Barack Obama?', function() 
+    {
+        Assert.equal(Anderson.whatIsIt("qui est Barack Obama?"),null);    
     });
     it('should return null - il est gentil hein? !', function() 
     {
