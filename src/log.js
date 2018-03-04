@@ -1,4 +1,4 @@
-const Config = require("./config");
+const Config = require("../static values/config");
 const Fs = require("fs");
 var log = {};
 

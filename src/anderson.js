@@ -1,7 +1,7 @@
 //import { utimesSync } from "fs";
 
 const Request = require("request");
-const Config = require("./config");
+const Config = require("../static values/config");
 const Log = require("./log");
 const Wikidata = require("./wikidata");
 const Utils = require("./utils");
@@ -43,39 +43,12 @@ anderson.sendHour = function(channel)
 
 
 
-anderson.applyInfos = function(wikidata_element,infos)
-{
-	console.log("coucou");
-	return new Promise((resolve, reject) => 
-	{
-		wikidata_element.getLabel("fr").then((label) =>
-		{
-			console.log(label +" - "+ infos[0])
-			wikidata_element.getClaimByName(infos[0]).then((value) =>
-			{
-				console.log(label+" : "+value);	
-				resolve(label+" : "+value)
-			})
-			.catch((error) =>
-			{
-				console.log(error)
-				reject(error)
-			})
-		})
-		.catch((error) =>
-		{
-				console.log(error)
-			reject(error)
-		})
-		
-	})
-}
-
-
-
-
-
-
+//search a word and send a custom description generate by <displayfunction> for all result which contains this word and match with <check function>
+// - word : word for which we want a description
+// - channel : telegram channel on which we will send the message
+// - lang : search language (fr)
+// - checkfunction : a filter on the result (ex : <Wikidata.isHuman> to get just human result)
+// - dislayfunction : function whick will organise what infos we will display about each result (ex: <anderson.applydescription> to get the label and the description)
 anderson.sendDecription = function(word,channel,lang,checkfunction,displayFunction)
 {
 	Wikidata.searchElement(word.toLowerCase())
@@ -115,6 +88,32 @@ anderson.sendDecription = function(word,channel,lang,checkfunction,displayFuncti
 }
 
 
+//display the label and the value of the attribute in <infos[0]>
+anderson.applyInfos = function(wikidata_element,infos)
+{
+	return new Promise((resolve, reject) => 
+	{
+		wikidata_element.getLabel("fr").then((label) =>
+		{
+			wikidata_element.getClaimByName(infos[0]).then((value) =>
+			{
+				resolve(label+" : "+value)
+			})
+			.catch((error) =>
+			{
+				reject(error)
+			})
+		})
+		.catch((error) =>
+		{
+			reject(error)
+		})
+		
+	})
+}
+
+
+//display the label and the description
 anderson.applyDescription = function(wikidata_element)
 {
 	return new Promise((resolve, reject) => 
@@ -138,6 +137,7 @@ anderson.applyDescription = function(wikidata_element)
 	})
 }
 
+//send telegram message on a channel
 anderson.sendMsg = function(message,channel)
 {
 	Request.post(

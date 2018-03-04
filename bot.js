@@ -1,9 +1,9 @@
 const Express = require('express')
 const Server = Express()
-const Config = require('./config')
+const Config = require('./static values/config')
 const BodyParser = require('body-parser')
-const Anderson = require('./anderson')
-const Log = require('./log')
+const Anderson = require('./src/anderson')
+const Log = require('./src/log')
 
 Server.use(BodyParser.json()); // for parsing application/json
 Server.use(BodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded

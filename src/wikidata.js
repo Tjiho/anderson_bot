@@ -1,5 +1,6 @@
 const Rp = require('request-promise');
-const Config = require("./config");
+const Config = require("../static values/config");
+const Data = require("../static values/data");
 const Log = require("./log");
 const Utils = require("./utils");
 var wikidata = {};

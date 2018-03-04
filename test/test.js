@@ -1,5 +1,5 @@
 var Assert = require('assert');
-var Anderson = require('../anderson')
+var Anderson = require('../src/anderson')
 
 
 //-------- test for question -----------
