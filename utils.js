@@ -20,4 +20,6 @@ utils.promisesToArray = function(list_promises)
     })
 }
 
+utils.oMap = (o, f) => Object.assign(...Object.keys(o).map(k => ({ [k]: f(o[k]) })))
+
 module.exports = utils;

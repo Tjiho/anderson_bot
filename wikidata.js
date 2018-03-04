@@ -117,33 +117,55 @@ class Instance
 
 	getClaimByName(name,lang = "fr")
 	{
+		var f = (claim) =>
+		{
+			let claim_property_id = claim[0].mainsnak.property
+			return new Promise((resolve, reject) => 
+			{
+				let claim_property = Instance.constructWithCache(claim_property_id)
+				claim_property.getLabel(lang).then((label) => {
+					//console.log(label)
+					if(label == name)
+					{
+						this.getClaimByid(claim_property_id).then((data) =>
+						{
+							resolve(this.claims[claim_property_id])	
+						})
+						.catch((error) =>
+						{
+							reject(error)
+						})
+					}
+					else
+					{
+						reject("not searched property")
+					}
+				})
+				.catch((error) =>
+				{
+					reject(error)
+				})
+			})
+		}
 		return new Promise((resolve, reject) => 
 		{
 			this.requestEntity().then((data) =>
 			{
-				let list_claim = data.claims
-				//console.log(list_claim)
-				Object.keys(list_claim).forEach(claim_property_id => {
-					
-					//console.log(element)
-					
-					let claim_property = Instance.constructWithCache(claim_property_id)
-					claim_property.getLabel(lang).then((label) => {
-						//console.log(label)
-						if(label == name)
-						{
-							this.getClaimByid(claim_property_id).then((data) =>
-							{
-								resolve(this.claims[claim_property_id])	
-							})
-							.catch((error) =>
-							{
-								reject(error)
-							})
-						}
-					})
-					
-				});
+				let obj_claim = data.claims
+				let list_claim = Object.keys(obj_claim).map(k => obj_claim[k])
+				
+				Utils.promisesToArray(list_claim.map(f)).then((values) =>{
+					if(values.length > 0)
+					{
+						resolve(values[0])
+					}
+					else
+						reject("no value")
+				})
+				.catch((error) =>
+				{
+					reject(error)
+				})
 			})
 			.catch((error) =>
 			{
@@ -330,6 +352,25 @@ wikidata.searchElement = function(name,lang = "fr")
 	})
 }
 
+
+wikidata.notWikinews = function(instance)
+{
+	return new Promise((resolve, reject) => 
+	{
+		instance.getPropertyById("P31").then((instance_of) =>
+		{
+			if(instance_of != "article de Wikinews")
+				resolve(instance)
+			else
+				reject("wikinews article")
+		})
+		.catch((error) =>
+		{
+			reject("not human")
+		})
+	})
+}
+
 wikidata.isHuman = function(instance)
 {
 	return new Promise((resolve, reject) => 
@@ -395,6 +436,6 @@ wikidata.searchElement("barack obama").then((data) =>
 .catch((error) =>
 {
 	console.log(error)
-})*/
-
+})
+*/
 module.exports = wikidata;
