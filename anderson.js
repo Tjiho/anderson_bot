@@ -17,11 +17,11 @@ anderson.getMsg = function(message,first_name,last_name,channel)
 	if(message == "yop" )	
 		anderson.sendMsg("yop",channel)
 	else if(who != null)
-		anderson.sendDecription(who,channel,"fr",Wikidata.isHuman)
+		anderson.sendDecription(who,channel,"fr",Wikidata.isHuman,anderson.applyDescription)
 	else if(what != null)
-		anderson.sendDecription(what,channel,"fr",Wikidata.isNotHuman)
-	else if(getInfoOf != null)
-		anderson.sendDecription(getInfoOf,channel,"fr")
+		anderson.sendDecription(what,channel,"fr",Wikidata.isNotHuman,anderson.applyDescription)
+	else if(infos != null)
+		anderson.sendDecription(infos[1],channel,"fr",Wikidata.isHuman,(e) => anderson.applyInfos(e,infos))
 	else if(anderson.isForHour(message))
 		anderson.sendHour(channel)
 	else if(anderson.isQuestion(message) && anderson.isMe(message))
@@ -42,49 +42,29 @@ anderson.sendHour = function(channel)
 }
 
 
-anderson.sendInfo = function(infos,channel,lang)
-{
-	Wikidata.searchElement(infos[1].toLowerCase())
-	.then((data) => 
-	{
-		list_promises = data.map((e) => anderson.applyInfos(e,infos))
-		Utils.promisesToArray(list_promises).then((results) =>
-		{
-			var rep = ""
-			results.forEach(element => {
-				rep += element + "\n"
-			})
-			anderson.sendMsg(rep,channel)
-		})
-		.catch((error) =>
-		{
-			console.log(error)
-		})
-	})
-	.catch((error) =>
-	{
-		console.log(error)
-	})
-}
-
 
 anderson.applyInfos = function(wikidata_element,infos)
 {
+	console.log("coucou");
 	return new Promise((resolve, reject) => 
 	{
 		wikidata_element.getLabel("fr").then((label) =>
 		{
+			console.log(label +" - "+ infos[0])
 			wikidata_element.getClaimByName(infos[0]).then((value) =>
 			{
+				console.log(label+" : "+value);	
 				resolve(label+" : "+value)
 			})
 			.catch((error) =>
 			{
+				console.log(error)
 				reject(error)
 			})
 		})
 		.catch((error) =>
 		{
+				console.log(error)
 			reject(error)
 		})
 		
@@ -96,21 +76,26 @@ anderson.applyInfos = function(wikidata_element,infos)
 
 
 
-anderson.sendDecription = function(word,channel,lang,checkfunction)
+anderson.sendDecription = function(word,channel,lang,checkfunction,displayFunction)
 {
 	Wikidata.searchElement(word.toLowerCase())
 	.then((data) => 
 	{
 		Utils.promisesToArray(data.map(checkfunction)).then((data) =>  
 		{
-			list_promises = data.map(anderson.applyDescription)
+			list_promises = data.map(displayFunction)
 			Utils.promisesToArray(list_promises).then((results) =>
 			{
-				var rep = ""
-				results.forEach(element => {
-					rep += element + "\n"
-				})
-				anderson.sendMsg(rep,channel)
+				if(results.length > 0)
+				{
+					var rep = ""
+					results.forEach(element => {
+						rep += element + "\n"
+					})
+					anderson.sendMsg(rep,channel)
+				}
+				else
+					rep = "je sais pas"
 			})
 			.catch((error) =>
 			{

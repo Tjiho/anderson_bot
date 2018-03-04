@@ -125,7 +125,7 @@ class Instance
 				let claim_property = Instance.constructWithCache(claim_property_id)
 				claim_property.getLabel(lang).then((label) => {
 					//console.log(label)
-					if(label == name)
+					if(label.toLowerCase() == name.toLowerCase())
 					{
 						this.getClaimByid(claim_property_id).then((data) =>
 						{
