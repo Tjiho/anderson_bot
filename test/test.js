@@ -61,13 +61,13 @@ describe('#isForHour', function() {
 // ------ test for who ---------
 describe('anderson', function() {
     describe('#whoIsIt', function() {
-        it('should return Barack_Obama - qui est Barack Obama?', function() 
+        it('should return Barack Obama - qui est Barack Obama?', function() 
         {
-            Assert.equal(Anderson.whoIsIt("qui est Barack Obama?"),"Barack_Obama");    
+            Assert.equal(Anderson.whoIsIt("qui est Barack Obama?"),"Barack Obama");    
         });
-        it('should return Steve_Jobs - c qui steve jobs ?', function() 
+        it('should return Steve Jobs - c qui steve jobs ?', function() 
         {
-            Assert.equal(Anderson.whoIsIt("c qui steve jobs ?"),'Steve_Jobs');    
+            Assert.equal(Anderson.whoIsIt("c qui steve jobs ?"),'Steve Jobs');    
         });
         it('should return null - c quoi du canard?', function() 
         {
@@ -188,5 +188,30 @@ describe('#hello', function() {
     {
         Assert.equal(Anderson.hello("anno 1404 est un super jeu"),false);    
     });
+})})
+
+
+describe('anderson', function() {
+    describe('#getInfoOf', function() {
+        it('should return ["taille","barack obama"] - quelle est la taille de barack obama?', function() 
+        {
+            Assert.deepEqual(Anderson.getInfoOf("quelle est la taille de barack obama?"),["taille","barack obama"]);    
+        });
+        it('should return ["poids","fourmi"] - quel est le poids d\'une fourmi?', function() 
+        {
+            Assert.deepEqual(Anderson.getInfoOf("quel est le poids d'une fourmi?"),["poids","fourmi"]);    
+        });
+        it('should return null - c\'est quoi du canard?', function() 
+        {
+            Assert.equal(Anderson.getInfoOf("c'est quoi du canard?"),null);    
+        });
+        it('should return null - il est gentil hein? !', function() 
+        {
+            Assert.equal(Anderson.getInfoOf("il est gentil hein?"),null);    
+        });
+        it('should return null - anno 1404 est un super jeu', function() 
+        {
+            Assert.equal(Anderson.getInfoOf("anno 1404 est un super jeu"),null);    
+        });
 })})
     

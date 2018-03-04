@@ -5,7 +5,9 @@ const Utils = require("./utils");
 var wikidata = {};
 
 
-
+// list_data
+// id_data
+// type_nameCamelCase
 /*
 TODO:
 Wikidata proxy : 
@@ -13,6 +15,7 @@ Wikidata proxy :
     - language default = fr
 - public listeAttributes => renvoie la liste des attributs de l'element.
 - public getAttribute(att) => renvoie la value de l'attribute
+- create synonyms dico : taille => hauteur
 
 
 */
@@ -112,6 +115,45 @@ class Instance
 	}
 	
 
+	getClaimByName(name,lang = "fr")
+	{
+		return new Promise((resolve, reject) => 
+		{
+			this.requestEntity().then((data) =>
+			{
+				let list_claim = data.claims
+				//console.log(list_claim)
+				Object.keys(list_claim).forEach(claim_property_id => {
+					
+					//console.log(element)
+					
+					let claim_property = Instance.constructWithCache(claim_property_id)
+					claim_property.getLabel(lang).then((label) => {
+						//console.log(label)
+						if(label == name)
+						{
+							this.getClaimByid(claim_property_id).then((data) =>
+							{
+								resolve(this.claims[claim_property_id])	
+							})
+							.catch((error) =>
+							{
+								reject(error)
+							})
+						}
+					})
+					
+				});
+			})
+			.catch((error) =>
+			{
+				console.log(error)
+				reject(error)
+				
+			})
+		})
+	}
+
 	getClaimByid(id,lang = "fr")
 	{
 		return new Promise((resolve, reject) => 
@@ -140,6 +182,12 @@ class Instance
 								this.claims[id] = label
 								resolve(id)
 							})
+						}
+						else if(claim_type == "quantity")
+						{
+							this.claims[id] = list_claim[id][0].mainsnak.datavalue.value.amount
+							resolve(id)
+							//todo : get unit
 						}
 						else
 						{
@@ -317,21 +365,21 @@ wikidata.isNotHuman = function(instance)
 		})
 	})
 }
-
-wikidata.searchElement("pierre").then((data) => 
+/*
+wikidata.searchElement("barack obama").then((data) => 
 {
 	//console.log(data)
-	Utils.promisesToArray(data.map(wikidata.isNotHuman)).then((data) =>  
+	Utils.promisesToArray(data.map(wikidata.isHuman)).then((data) =>  
 	{
 		data.forEach(element => {
 			element.getLabel("fr").then((label) =>
 			{
-				element.getDescription("fr").then((description) =>
+				element.getClaimByName("hauteur").then((value) =>
 				{
 					
 					wikidata.isHuman(element).then((a) =>
 					{
-						console.log("[h]" +label+" :"+description)
+						console.log("[h]" +label+" :"+value)
 					})
 					.catch((error) =>
 					{
@@ -347,6 +395,6 @@ wikidata.searchElement("pierre").then((data) =>
 .catch((error) =>
 {
 	console.log(error)
-})
+})*/
 
 module.exports = wikidata;
