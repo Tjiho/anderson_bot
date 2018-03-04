@@ -1,3 +1,11 @@
 language: node_js
 node_js:
   - "8"
+before_install:
+  - echo 'var config = {};
+          config.key = "azerty"
+          config.botKey = "botkey"
+          config.error = "error.log"
+          config.log = "info.log"
+          config.port = "3456"
+          module.exports = config;"' > static\ values/config.js
