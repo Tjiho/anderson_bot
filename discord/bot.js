@@ -3,8 +3,10 @@ var Events = Discordie.Events;
 var client = new Discordie();
 
 const Morpion = require("./morpion");
+const Pui4 = require('./puissance 4');
 const Morpion_cmd = require("./morpion_cmd");
 
+p4_cmd = new Morpion_cmd(Pui4,"p4","Puissance 4")
 morpion_cmd = new Morpion_cmd(Morpion,"morpion","tic tac toe")
 
 client.connect({ token: "NDI0MzE4NzI0MjQyNDA3NDI0.DZBNhA.RXcigkKtOScuqHjLHKZetONfQOE" });
@@ -36,7 +38,8 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                     fields: 
                     [
                         {name: "Basic", value: "`hey`,`help`"},
-                        {name: "Morpion", value: "`morpion start [user]`,`morpion play <x> <y> [id]`,`morpion clean`,`morpion games`"}
+                        {name: "Morpion", value: "`morpion start [user]`,`morpion play <x> <y> [id]`,`morpion clean`,`morpion games`"},
+                        {name: "Puissance 4", value: "`p4 start [user]`,`p4 play <col> [id]`,`p4 clean`,`p4 games`"}
                     ],
                 })
             break;
@@ -47,9 +50,9 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                 //e.message.channel.sendMessage("la sation spatiale n'est pas encore operationelle")
                 e.message.channel.sendMessage(morpion_cmd.manage(args,e.message.author.username))                
             break;
-            case 'game':
+            case 'p4':
                 //e.message.channel.sendMessage("la sation spatiale n'est pas encore operationelle")
-                e.message.channel.sendMessage(morpion_cmd.manage(args,e.message.author.username))                
+                e.message.channel.sendMessage(p4_cmd.manage(args,e.message.author.username))                
             break;
             default:
                 e.message.reply("type `~help`")
@@ -59,7 +62,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
         catch(err)
         {
             console.log(err)
-            e.message.channel.sendMessage("un électron quantique a tous cassé : "+err)     
+            e.message.channel.sendMessage("un électron quantique a tout cassé : "+err)     
         }
      }
 });

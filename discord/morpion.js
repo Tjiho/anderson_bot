@@ -27,6 +27,11 @@ class Morpion
         
     }
 
+    static helpPlay()
+    {
+        return "Type `~morpion play x y` to play"
+    }
+
     getPlayer()
     {
         return [this.player1,this.player2];
@@ -34,9 +39,10 @@ class Morpion
     display()
     {
         var res = ""
+        
         for(let x = 0;x<3;x++)
         {
-            res+="`|"
+            res+="`"+(x+1)+"|"
             for(let y = 0;y<3;y++)
             {
                 if(this.grilleContenu[x][y])

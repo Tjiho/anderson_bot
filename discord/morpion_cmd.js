@@ -68,7 +68,7 @@ var Morpion_cmd = function(game,name,real_name)
         return  res+
                 "\n"+players[0]+" VS "+players[1]+    
                 "\n"+m.display()+
-                "\n"+"`"+this.name+" play x y` to play"
+                "\n"+this.game.helpPlay()
     }
 
     //add reference <morpion> for two players <players>
@@ -166,7 +166,7 @@ var Morpion_cmd = function(game,name,real_name)
 
         if(morpion_res[0] == "end")
         {
-            return "\n" + morpion.display() + "\n" + morpion_res[1]
+            return "\n"+morpion_res[1]+"\n" + morpion.display()
         }
         else if(morpion_res[0] == "error")
         {
