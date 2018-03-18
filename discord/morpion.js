@@ -2,38 +2,6 @@ const Hash = require('hash.js')
 
 class Morpion
 {
-    static addGame(player1,player2)
-    {
-        if(this.list_morpions === undefined)
-			this.list_morpions = {}
-
-        var hash = Hash.sha256().update(player1+"-"+player2).digest('hex');
-        this.list_morpions[hash] = new Morpion(player1,player2)
-
-        return this.list_morpions[hash]
-    }
-
-    static getGame(player1,player2)
-    {
-        if(this.list_morpions === undefined)
-			this.list_morpions = {}
-        
-        var hash = Hash.sha256().update(player1+"-"+player2).digest('hex');
-
-        if(hash in this.list_morpions)
-            return this.list_morpions[hash]
-        else
-            return -1
-    }
-
-    static deleteGame(player1,player2)
-    {
-
-        var hash = Hash.sha256().update(player1+"-"+player2).digest('hex');
-
-        if(hash in this.list_morpions)
-            delete this.list_morpions[hash]
-    }
 
     constructor(player1,player2)
     {
@@ -68,7 +36,7 @@ class Morpion
         var res = ""
         for(let x = 0;x<3;x++)
         {
-            res+="|"
+            res+="`|"
             for(let y = 0;y<3;y++)
             {
                 if(this.grilleContenu[x][y])
@@ -77,19 +45,20 @@ class Morpion
                     else
                         res+="o"
                 else
-                    res+="?"
+                    res+=" "
                 
                 res+="|"
             }
-            res += '\n'
+            res += '`\n'
         }
         return res
     }
 
 
-    play(x,y,user)
+    play(user,args)
     {
-            
+            var x = args[0]
+            var y = args[1]
             if(this.tour && user != this.player2)
             {
                 return ["error","It's not your turn"]
@@ -119,7 +88,11 @@ class Morpion
             }
             else
             {
-                this.playIa()
+                this.nombreTour++
+                this.tour = !this.tour
+                var c = this.playIa()
+                x = c[0]
+                y = c[1]
             }
 
             if(this.nombreTour > 8 )
@@ -169,7 +142,14 @@ class Morpion
                     this.grilleContenu [x][y] = true;
                     this.grilleJoueur [x][y] = this.tour;
             }
+        return [x,y]
     }
+
+    static nbrArgs()
+    {
+        return 2
+    }
+    
 
 
 

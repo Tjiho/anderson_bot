@@ -2,10 +2,12 @@ var Discordie = require("discordie");
 var Events = Discordie.Events;
 var client = new Discordie();
 
-
+const Morpion = require("./morpion");
 const Morpion_cmd = require("./morpion_cmd");
 
-client.connect({ token: "NDI0MzE4NzI0MjQyNDA3NDI0.DY3R-g._JmrgLf5pAapKHwyRLPSwOp1t3g" });
+morpion_cmd = new Morpion_cmd(Morpion,"morpion","tic tac toe")
+
+client.connect({ token: "NDI0MzE4NzI0MjQyNDA3NDI0.DZBNhA.RXcigkKtOScuqHjLHKZetONfQOE" });
 
 client.Dispatcher.on(Events.GATEWAY_READY, e => {
   console.log("Connected as: " + client.User.username);
@@ -34,7 +36,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                     fields: 
                     [
                         {name: "Basic", value: "`hey`,`help`"},
-                        {name: "Morpion", value: "`morpion start [user]`,`morpion play <x> <y> [id]`,`morpion clean`,`morpion list`"}
+                        {name: "Morpion", value: "`morpion start [user]`,`morpion play <x> <y> [id]`,`morpion clean`,`morpion games`"}
                     ],
                 })
             break;
@@ -42,7 +44,12 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                 e.message.reply("hey !"))
             break;
             case 'morpion':
-                e.message.channel.sendMessage(Morpion_cmd.manage(args,e.message.author.username))                
+                //e.message.channel.sendMessage("la sation spatiale n'est pas encore operationelle")
+                e.message.channel.sendMessage(morpion_cmd.manage(args,e.message.author.username))                
+            break;
+            case 'game':
+                //e.message.channel.sendMessage("la sation spatiale n'est pas encore operationelle")
+                e.message.channel.sendMessage(morpion_cmd.manage(args,e.message.author.username))                
             break;
             default:
                 e.message.reply("type `~help`")
@@ -51,6 +58,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
         }
         catch(err)
         {
+            console.log(err)
             e.message.channel.sendMessage("un électron quantique a tous cassé : "+err)     
         }
      }
