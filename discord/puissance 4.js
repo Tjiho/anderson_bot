@@ -130,8 +130,8 @@ class Pui4
 
     verificationPartie() {
         if(this.verificationGagnant(this.player,this.grille)) {
-            this.reinitialiserGrille();
             this.display()
+            this.reinitialiserGrille();
             return 1
         }
         else if(this.verificationEgalite(this.grille,this.grille)) {

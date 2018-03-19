@@ -31,7 +31,27 @@ class Morpion
     {
         return "Type `~morpion play x y` to play"
     }
+    
+    init()
+    {
 
+        this.tour = false
+        this.nombreTour = 0
+
+        this.grilleContenu = 
+        [
+            [false,false,false],
+            [false,false,false],
+            [false,false,false]
+        ];
+
+        this.grilleJoueur = 
+        [
+            [-1,-1,-1],
+            [-1,-1,-1],
+            [-1,-1,-1]
+        ];
+    }
     getPlayer()
     {
         return [this.player1,this.player2];
@@ -107,8 +127,11 @@ class Morpion
             }
 
             if(this.gainCol(y,this.tour,this.grilleJoueur) || this.gainligne(x,this.tour,this.grilleJoueur) || this.gainDiag(this.tour,this.grilleJoueur) )
-                return ["end",user + " win !"]
-
+            {
+		this.display()
+		this.init()
+		return ["end",user + " win !"]
+	    }
             return ["ok",user+" played"]
     }
 

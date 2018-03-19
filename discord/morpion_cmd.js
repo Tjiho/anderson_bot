@@ -12,10 +12,10 @@ var Morpion_cmd = function(game,name,real_name)
     this.manage = function(args,user)
     {
         if(args.length < 1)
-            return( '`~'+this.name+' start [username opponent]` to start a '+this.real_name+' vs someone or IA\n'
-                    +'`~'+this.name+' play <x> <y> [id game]`\n'
-                    +'`~'+this.name+' clean` to delete all your games\n'
-                    +'`~'+this.name+' games` to see your games')
+            return( 'Type `~'+this.name+' start [username opponent]` to start a '+this.real_name+' vs someone or IA\n'
+                    + this.game.helpPlay() + '\n'
+                    +'Type `~'+this.name+' clean` to delete all your games\n'
+                    +'Type `~'+this.name+' games` to see your games')
         switch(args[0])
         {
             case 'start':
@@ -31,10 +31,10 @@ var Morpion_cmd = function(game,name,real_name)
                 return this.displayGames(args,user)
             break;
             default:
-                return( '`~'+this.name+' start [username opponent]` to start a '+this.real_name+' vs someone or IA\n'
-                    +'`~'+this.name+' play <x> <y> [id game]`\n'
-                    +'`~'+this.name+' clean` to delete all your games\n'
-                    +'`~'+this.name+' games` to see your games')
+                return( 'Type `~'+this.name+' start [username opponent]` to start a '+this.real_name+' vs someone or IA\n'
+                    + this.game.helpPlay() + '\n'
+                    + 'Type `~'+this.name+' clean` to delete all your games\n'
+                    + 'Type `~'+this.name+' games` to see your games')
 
         }
     }

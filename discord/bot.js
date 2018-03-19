@@ -37,7 +37,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                     title: "Anderson sonne sonne ",
                     fields: 
                     [
-                        {name: "Basic", value: "`hey`,`help`"},
+                        {name: "Basic", value: "`hey`,`help`,`news?`,`todo`"},
                         {name: "Morpion", value: "`morpion start [user]`,`morpion play <x> <y> [id]`,`morpion clean`,`morpion games`"},
                         {name: "Puissance 4", value: "`p4 start [user]`,`p4 play <col> [id]`,`p4 clean`,`p4 games`"}
                     ],
@@ -45,6 +45,12 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
             break;
             case 'hey':(
                 e.message.reply("hey !"))
+            break;
+            case 'news?':(
+                e.message.reply("J'ai appris à jouer au puissance 4 grâce à Maximilien Marie: \n https://github.com/akraxx/Puissance4-Canvas"))
+            break;
+            case 'todo':(
+                e.message.reply("\n` - faire une IA de morpion`\n` - trouver une IA de puissance 4`\n` - fusionner avec mon jumeau sur télégram`"))
             break;
             case 'morpion':
                 //e.message.channel.sendMessage("la sation spatiale n'est pas encore operationelle")
