@@ -98,20 +98,13 @@ class Pui4
         var place = false;
         place = this.addJeton(args[0]-1)
 
-        if(user == "IA")
-        {
-            this.changePlayer();
-            return["ok","IA played the same as you"]
-        }
-
-
         if(this.players[this.player] != user)
             return ["error","It's not your turn"]
 
         if(place == true) {
             var win = this.verificationPartie();
             if(win == 1)
-                return ["end",user + " win !"]
+                return ["win",user + " win !"]
             
             if(win == 2)
                 return ["end","egualité !"]
@@ -217,10 +210,118 @@ class Pui4
         return false;
     }
 
+    cerveau(x,playerFictif,tourIa,grilleFictif)
+    {
+            var gain = 0;
+            var i;
+            var j;
+
+            grilleFictif [x][y] = tourFictif;
+
+            //console.log(nombreFictif,':',x,' ',y);
+            if(nombreFictif > this.nombreTour+3)
+            {
+                    grilleContenuFictif [x][y] = false;
+                    grilleJoueurFictif [x][y] = -1;
+                    return 0;
+            }
+            else if(this.gainCol(y,tourFictif,grilleJoueurFictif) || this.gainligne(x,tourFictif,grilleJoueurFictif) || this.gainDiag(tourFictif,grilleJoueurFictif) && (tourFictif == tourIa))
+            {
+                    grilleContenuFictif [x][y] = false;
+                    grilleJoueurFictif [x][y] = +1;
+                    return 1;
+            }
+            else if(this.gainCol(y,tourFictif,grilleJoueurFictif) || this.gainligne(x,tourFictif,grilleJoueurFictif) || this.gainDiag(tourFictif,grilleJoueurFictif) && (tourFictif != tourIa))
+            {
+                    grilleContenuFictif [x][y] = false;
+                    grilleJoueurFictif [x][y] = -1;
+                    return +5;
+            }
+            else
+            {
+
+                    for(i=0;i<3;i++)
+                    {
+                            for(j=0;j<3;j++)
+                            {
+                                            //console.log('x,y:'+x+' '+y);
+                                            if(!grilleContenuFictif[i][j])
+                                            {
+                                                    gain = gain + this.cerveau(i,j,!tourFictif,nombreFictif+1,tourIa,grilleJoueurFictif,grilleContenuFictif);
+
+                                                    //console.log('gain: '+gain + 'x,y:'+x+' '+y);
+                                            }
+
+                            }
+                    }
+                    grilleContenuFictif [x][y] = false;
+                    grilleJoueurFictif [x][y] = -1;
+                    return gain
+
+            }
+
+            grilleContenuFictif [x][y] = false;
+            grilleJoueurFictif [x][y] = -1;
+            return 0;
+    }
+
+
     
+
+
+    playIa()
+    {  
+        console.log("ia...")
+        if(this.nombreTour < 9)
+        {
+            var x=1;
+            var y=1;
+            var end;
+            var bon = 999;
+            var temp;
+
+            do
+            {
+                    for(let i=0;i<3;i++)
+                    {
+                            for(let j=0;j<3;j++)
+                            {
+                                    if(!this.grilleContenu[i][j])
+                                    {
+                                            temp = this.cerveau(i,j,this.tour,this.nombreTour,this.tour,this.grilleJoueur,this.grilleContenu);
+                                            console.log("--->"+i+"_"+j+"_"+temp);
+                                            if(temp < bon)
+                                            {
+                                                    bon = temp;
+                                                    x=i;
+                                                    y=j;
+                                            }
+
+
+                                    }
+
+                            }
+                    }
+                    //x=alea();
+                    //y=alea();
+            }while(this.grilleContenu[x][y])
+        }
+        return [x,y]
+    }
+
+
     static nbrArgs()
     {
         return 1
+    }
+
+    static coupsPossibles()
+    {
+        var c = []
+        for(let i=0;i<7;i++)
+            c.push([i+1])
+
+        return c
     }
     
 

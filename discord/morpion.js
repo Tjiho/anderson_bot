@@ -98,7 +98,7 @@ class Morpion
             let res;
             
 
-            if(user != "IA")
+            if(true)
             {
                 x=x-1;
                 y=y-1;
@@ -112,15 +112,7 @@ class Morpion
                 else
                     return ["error","Invalid"]
             }
-            else
-            {
-                this.nombreTour++
-                this.tour = !this.tour
-                var c = this.playIa()
-                x = c[0]
-                y = c[1]
-            }
-
+            
             if(this.nombreTour > 8 )
             {
                 return ["end","egualité !"]
@@ -128,10 +120,10 @@ class Morpion
 
             if(this.gainCol(y,this.tour,this.grilleJoueur) || this.gainligne(x,this.tour,this.grilleJoueur) || this.gainDiag(this.tour,this.grilleJoueur) )
             {
-		this.display()
-		this.init()
-		return ["end",user + " win !"]
-	    }
+		        this.display()
+		        this.init()
+		        return ["win",user + " win !"]
+	        }
             return ["ok",user+" played"]
     }
 
@@ -174,13 +166,13 @@ class Morpion
             {
                     grilleContenuFictif [x][y] = false;
                     grilleJoueurFictif [x][y] = +1;
-                    return 1;
+                    return +1;
             }
             else if(this.gainCol(y,tourFictif,grilleJoueurFictif) || this.gainligne(x,tourFictif,grilleJoueurFictif) || this.gainDiag(tourFictif,grilleJoueurFictif) && (tourFictif != tourIa))
             {
                     grilleContenuFictif [x][y] = false;
                     grilleJoueurFictif [x][y] = -1;
-                    return +5;
+                    return +10;
             }
             else
             {
@@ -259,7 +251,15 @@ class Morpion
         return 2
     }
     
+    static coupsPossibles()
+    {
+        var c = []
+        for(let i=0;i<3;i++)
+            for(let j=0;j<3;j++)
+                c.push([i+1,j+1])
 
+        return c
+    }
 
 
 }
