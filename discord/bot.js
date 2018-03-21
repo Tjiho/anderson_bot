@@ -9,7 +9,7 @@ const Morpion_cmd = require("./morpion_cmd");
 p4_cmd = new Morpion_cmd(Pui4,"p4","Puissance 4")
 morpion_cmd = new Morpion_cmd(Morpion,"morpion","tic tac toe")
 
-client.connect({ token: "NDI0MzE4NzI0MjQyNDA3NDI0.DZBNhA.RXcigkKtOScuqHjLHKZetONfQOE" });
+client.connect({ token: "NDI0MzE4NzI0MjQyNDA3NDI0.DZHrVg.315LYrxuUPupoboGzq_bZGSLw_Y" });
 
 client.Dispatcher.on(Events.GATEWAY_READY, e => {
   console.log("Connected as: " + client.User.username);
@@ -38,6 +38,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                     fields: 
                     [
                         {name: "Basic", value: "`hey`,`help`,`news?`,`todo`"},
+                        {name: "Action", value: "`delete [word]`,`create [word]`,`[verb] [word]`"},
                         {name: "Morpion", value: "`morpion start [user]`,`morpion play <x> <y> [id]`,`morpion clean`,`morpion games`"},
                         {name: "Puissance 4", value: "`p4 start [user]`,`p4 play <col> [id]`,`p4 clean`,`p4 games`"}
                     ],
@@ -47,7 +48,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                 e.message.reply("hey !"))
             break;
             case 'news?':(
-                e.message.reply("J'ai appris à jouer au puissance 4 grâce à Maximilien Marie: \n https://github.com/akraxx/Puissance4-Canvas"))
+                e.message.reply("Try ~delete and ~create"))
             break;
             case 'todo':(
                 e.message.reply("\n` - faire une IA de morpion`\n` - trouver une IA de puissance 4`\n` - fusionner avec mon jumeau sur télégram`"))
@@ -56,12 +57,26 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                 //e.message.channel.sendMessage("la sation spatiale n'est pas encore operationelle")
                 e.message.channel.sendMessage(morpion_cmd.manage(args,e.message.author.username))                
             break;
-            case 'p4':
+	    case 'delete':
+		e.message.channel.sendMessage(args.join(" ")+" was deleted");
+	    break;
+	    case 'create':
+		e.message.channel.sendMessage(args.join(" ")+" was created");
+	    break;
+	    case 'p4':
                 //e.message.channel.sendMessage("la sation spatiale n'est pas encore operationelle")
                 e.message.channel.sendMessage(p4_cmd.manage(args,e.message.author.username))                
             break;
             default:
-                e.message.reply("type `~help`")
+		if(args.length > 0)
+		{
+			if(cmd[cmd.length -1] == "e")
+				e.message.channel.sendMessage(args.join(" ")+" was "+cmd+"d");
+			else
+				e.message.channel.sendMessage(args.join(" ")+" was "+cmd+"ed");
+		}
+		else
+			e.message.reply("type `~help`")
             // add any other commands here.
          }
         }
