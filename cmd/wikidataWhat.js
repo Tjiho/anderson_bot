@@ -3,6 +3,7 @@ const Wikidata = require("../share/wikidata")
 
 exports["action"] = function(message,f_reply,f_send)
 {
+    f_reply("je cherche sur wikidata...")
     what = whatIsIt(message)    
     sendDescription(what,"fr",Wikidata.isNotHuman,applyDescription,f_reply)
 }
@@ -21,7 +22,7 @@ whatIsIt = function(message)
 {
 
 	//ex : c'est quoi un|une accordéon? , c quoi ... 
-	regex = RegExp("c(?:'est)? (?:quoi|koi) (?:le)?(?:la)?(?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)\\?")
+	regex = RegExp("c(?:'est)? (?:quoi|koi) (?:le)?(?:la)?(?:une)?(?:un)?(?:du)?(?:de la)?(?:des)?(?:les)?(.*)")
 	res = regex.exec(message)
 	if(res != null)
 	{

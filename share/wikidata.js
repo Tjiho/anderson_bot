@@ -124,7 +124,17 @@ class Instance
 				let claim_property = Instance.constructWithCache(claim_property_id)
 				claim_property.getLabel(lang).then((label) => {
 					//console.log(label)
-					if(label.toLowerCase() == name.toLowerCase())
+					var list_syn = Data.synonym[label.toLowerCase()]
+					console.log(list_syn,label.toLowerCase())
+					var ok = false
+					for(var ii in list_syn)
+					{
+						console.log(list_syn[ii])
+						if(name.toLowerCase() == list_syn[ii].toLowerCase())
+							var ok = true
+					}
+
+					if(label.toLowerCase() == name.toLowerCase() || ok)
 					{
 						this.getClaimByid(claim_property_id).then((data) =>
 						{

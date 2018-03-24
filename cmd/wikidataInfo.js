@@ -3,6 +3,7 @@ const Wikidata = require("../share/wikidata")
 
 exports["action"] = function(message,f_reply,f_send)
 {
+    f_reply("je cherche sur wikidata...")
     infos = getInfoOf(message)
     sendDescription(infos[1],"fr",Wikidata.isHuman,(e) => applyInfos(e,infos),f_reply)
 }
@@ -19,7 +20,7 @@ exports["help"] =
 
 function getInfoOf(message)
 {
-	regex = RegExp("(?:quelle|quel) est (?:le|la|l')(.*) (?:de|du|d'une|d'un|des|d')(.*)\\?")
+	regex = RegExp("(?:quelle|quel) est (?:le|la|l')(.*) (?:de|du|d'une|d'un|des|d')(.*)")
 	res = regex.exec(message)
 	if(res != null)
 	{

@@ -3,6 +3,7 @@ const Wikidata = require("../share/wikidata")
 
 exports["action"] = function(message,f_reply,f_send)
 {
+    f_reply("je cherche sur wikidata...")
     who = whoIsIt(message)
     
     sendDescription(who,"fr",Wikidata.isHuman,applyDescription,f_reply)
@@ -20,14 +21,14 @@ exports["help"] =
 whoIsIt = function(message)
 {
 	//ex : qui est steve jobs?
-	regex = RegExp("qui est (.*)\\?")
+	regex = RegExp("qui est (.*)")
 	res = regex.exec(message)
 	if(res != null)
 	{
 		return toTitleCase(res[1].trim())
 	}
 
-	regex = RegExp("c(?:'est)? (?:qui|ki) (.*)\\?")
+	regex = RegExp("c(?:'est)? (?:qui|ki) (.*)")
 	res = regex.exec(message)
 	if(res != null)
 	{
