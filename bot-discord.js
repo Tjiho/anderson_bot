@@ -1,11 +1,12 @@
 var Discordie = require("discordie");
 var Events = Discordie.Events;
 var client = new Discordie();
+const config = require("./config")
 const Cmds = require("./cmd")
 const Cmds_embed = require("./cmd_discord")
 
 
-client.connect({ token: "NDI0MzE4NzI0MjQyNDA3NDI0.DZW95A.abG-xg4NjAxaoqWNPgZZPcAkCiA" });
+client.connect({ token: config.discord });
 
 client.Dispatcher.on(Events.GATEWAY_READY, e => {
   console.log("Connected as: " + client.User.username);
