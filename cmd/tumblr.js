@@ -1,5 +1,5 @@
 const Check = require("../share/check")
-const config = require('../config')
+const config = require('../static values/config')
 exports["action"] = function(message,f_reply,f_send)
 {
    var Tumblr = require('tumblrwks');
@@ -29,10 +29,8 @@ function getRandomInt(max) {
     	if(args.length > 0)
     	{
     		tumblr.get('/posts', {limit:1,type:"photo",hostname: args[0]+'.tumblr.com'}, function(err, json){
-			//console.log(json.total_posts)
 			var randomm = getRandomInt(json.total_posts)
-			console.log(randomm)
-    			if(randomm > 0)
+			if(randomm > 0)
 				tumblr.get('/posts', {limit:2, offset:randomm,type:"photo",hostname: args[0]+'.tumblr.com'}, function(err, json){			
 					posts = json.posts
 					first = posts[0]
@@ -42,12 +40,6 @@ function getRandomInt(max) {
 					else
 						f_send(message)
 				});
-			
-			//posts = json.posts.filter(filterImage)
-			//first = posts[0]
-			//photo = first.photos
-			//console.log(first)
-			//.original_size.url)
 		});
 	}
 }

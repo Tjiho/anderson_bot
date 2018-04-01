@@ -1,7 +1,7 @@
 var Discordie = require("discordie");
 var Events = Discordie.Events;
 var client = new Discordie();
-const config = require("./config")
+const config = require("./static values/config")
 const Cmds = require("./cmd")
 const Cmds_embed = require("./cmd_discord")
 
