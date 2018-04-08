@@ -25,11 +25,11 @@ exports["action"] = function(message,f_send)
     })
 }
 
-exports["test"] = (message) => Check.checkCmd(message,["help"])
+exports["test"] = (message) => Check.checkCmd(message,["help"]) || Check.checkCmd(message,["aide"]) || Check.checkCmd(message,["?"])
 
 
 exports["help"] = 
 {
-    cmd:["help"],
+    cmd:["help | aide | ?"],
     help:"affiche l'aide"
 }

@@ -13,7 +13,7 @@ exports["action"] = function(message,f_reply,f_send)
             f_send(args.join(" ")+" was "+cmd+"ed");
     }
     else
-        f_reply("type `~help`")
+        f_reply("type `~help` or `~aide` or `~?`")
 }
 
 exports["test"] = (message) => false

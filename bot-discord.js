@@ -38,6 +38,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                                 message,
                                 (msg) => reply(e,msg),
                                 (msg) => send(e,msg),
+                                (msg) => embed(e,msg),
                                 arobase,
                                 true
                             ), 1500);  
@@ -47,6 +48,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                 message,
                 (msg) => reply(e,msg),
                 (msg) => send(e,msg),
+                (msg) => embed(e,msg),
                 arobase,
                 false
             )
@@ -55,9 +57,8 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     }
 });
 
-function execCmd(message,f_reply,f_send,arobase,special)
+function execCmd(message,f_reply,f_send,f_embed,arobase,special)
 {
-    console.log("plop")
     try
     {
         for(cmd_name in Cmds)
@@ -73,7 +74,7 @@ function execCmd(message,f_reply,f_send,arobase,special)
         {
             if(Cmds_embed[cmd_name].test(message))
             {
-                Cmds_embed[cmd_name].action(message,f_reply,f_send)
+                Cmds_embed[cmd_name].action(message,f_embed)
                 return true
             }    
         }
@@ -86,7 +87,7 @@ function execCmd(message,f_reply,f_send,arobase,special)
     catch(err)
     {
         console.log(err)
-        e.message.channel.sendMessage("un électron quantique a tout cassé : "+err)     
+        f_send("un électron quantique a tout cassé : "+err)     
     }
     
 }
