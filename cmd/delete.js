@@ -1,6 +1,6 @@
 const Check = require("../share/check")
 
-exports["action"] = function(message,f_reply,f_send)
+exports["action"] = function(message,f_reply,f_send,client)
 {
     f_send("http://www.randomnoun.com/wpf/shell32-avi/tshell32_162.gif")
     

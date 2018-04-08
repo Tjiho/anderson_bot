@@ -18,7 +18,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     var message = e.message.content
     var ok = false
     var arobase = false
-  
+
     if (message.substring(0, 1) == '~' || message.indexOf("<@424318724242407424>") > -1) 
     {
         if (message.substring(0, 1) == '~') 
@@ -65,7 +65,7 @@ function execCmd(message,f_reply,f_send,f_embed,arobase,special)
         {
             if(Cmds[cmd_name].test(message))
             {
-                Cmds[cmd_name].action(message,f_reply,f_send)
+                Cmds[cmd_name].action(message,f_reply,f_send,client)
                 return true
             }    
         }
@@ -94,11 +94,13 @@ function execCmd(message,f_reply,f_send,f_embed,arobase,special)
 
 function reply(e,message)
 {
+    message = message.replace("<me>",e.message.author.nickMention)
     e.message.reply(message)
 }
 
 function send(e,message)
 {
+    message = message.replace("<me>",e.message.author.nickMention)
     e.message.channel.sendMessage(message)
 }
 

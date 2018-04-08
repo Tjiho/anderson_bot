@@ -1,7 +1,7 @@
 const sendDescription = require("../share/promiseAndCo")["sendDescription"]
 const Wikidata = require("../share/wikidata")
 
-exports["action"] = function(message,f_reply,f_send)
+exports["action"] = function(message,f_reply,f_send,client)
 {
     f_reply("je cherche sur wikidata...")
     what = whatIsIt(message)    

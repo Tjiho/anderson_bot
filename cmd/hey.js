@@ -1,8 +1,16 @@
 const Check = require("../share/check")
 
-exports["action"] = function(message,f_reply,f_send)
+exports["action"] = function(message,f_reply,f_send,client)
 {
-    f_reply("hey")
+    forsomeone = message.indexOf("@")
+    if(forsomeone < 0)
+        f_reply("hey")
+    else
+    {
+        who = message.substring(forsomeone+1, 21)//get id of user
+        user = client.Users.find(u => u.id.indexOf(who) > -1)//get user by id
+        f_send(user.nickMention+" bonjour de la part de <me>")
+    }
 }
 
 exports["test"] = (message) => {

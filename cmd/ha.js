@@ -1,6 +1,6 @@
 const Check = require("../share/check")
 
-exports["action"] = function(message,f_reply,f_send)
+exports["action"] = function(message,f_reply,f_send,client)
 {
     f_send("https://gph.is/2ry1MNK")
 }

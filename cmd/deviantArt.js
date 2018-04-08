@@ -2,7 +2,7 @@ const Check = require("../share/check")
 const config = require('../static values/config')
 const Damn = require('../share/damn/index');
 
-exports["action"] = function(message,f_reply,f_send)
+exports["action"] = function(message,f_reply,f_send,client)
 {
 
 	function getRandomInt(max) 

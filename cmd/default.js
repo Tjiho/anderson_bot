@@ -1,4 +1,4 @@
-exports["action"] = function(message,f_reply,f_send)
+exports["action"] = function(message,f_reply,f_send,client)
 {
 
     var args = message.split(' ');
