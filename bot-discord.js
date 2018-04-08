@@ -25,7 +25,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     
     var message = e.message.content
     var ok = false
-    
+    var arobase = false
    // cosolee.message.author.username = "tjiho)
 	
    // console.log(message.indexOf("<@424318724242407424>"),message)
@@ -37,43 +37,53 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
         
 
         if (message.substring(0, 3) == '<@4')
-		message = message.slice(22) 
-		
-	// console.log(message) 
-    	if(e.message.author.username == "Krysthalia")
-	{
-		getRandomLine("random.txt",e)
-	//	return 5
-	}
-	try
         {
-            for(cmd_name in Cmds)
-            {
-                if(Cmds[cmd_name].test(message))
-                {
-                    Cmds[cmd_name].action(message,(msg) => reply(e,msg),(msg) => send(e,msg))
-                    return true
-                }    
-            }
-
-            for(cmd_name in Cmds_embed)
-            {
-                if(Cmds_embed[cmd_name].test(message))
-                {
-                    Cmds_embed[cmd_name].action(message,(args) => embed(e,args))
-                    return true
-                }    
-            }
-
-            Cmds["default"].action(message,(msg) => reply(e,msg),(msg) => send(e,msg))
+		    message = message.slice(22) 
+            arobase = true
+        }
+        // console.log(message) 
+        if(e.message.author.username == "Krysthalia")
+        {
+            getRandomLine("random.txt",e)
+        }
+        try
+        {
+            setTimeout(() => execCmd(message,arobase), 1500);            
         }
         catch(err)
         {
             console.log(err)
             e.message.channel.sendMessage("un électron quantique a tout cassé : "+err)     
         }
-     }
+    }
 });
+
+function execCmd(message,arobase)
+{
+    for(cmd_name in Cmds)
+    {
+        if(Cmds[cmd_name].test(message))
+        {
+            Cmds[cmd_name].action(message,(msg) => reply(e,msg),(msg) => send(e,msg))
+            return true
+        }    
+    }
+
+    for(cmd_name in Cmds_embed)
+    {
+        if(Cmds_embed[cmd_name].test(message))
+        {
+            Cmds_embed[cmd_name].action(message,(args) => embed(e,args))
+            return true
+        }    
+    }
+
+    if(! arobase)
+    {
+        console.log('plop')
+        Cmds["default"].action(message,(msg) => reply(e,msg),(msg) => send(e,msg))
+    }
+}
 
 function reply(e,message)
 {
