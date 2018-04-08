@@ -4,16 +4,8 @@ var client = new Discordie();
 const config = require("./static values/config")
 const Cmds = require("./cmd")
 const Cmds_embed = require("./cmd_discord")
-const fs = require("fs")
-function getRandomLine(filename,e){
-  fs.readFile(filename, function(err, data){
-    if(err) throw err;
-    data+=""
-    var lines = data.split('\n');
-    
-    reply(e,lines[Math.floor(Math.random()*lines.length)]);
- })
-}
+
+
 
 client.connect({ token: config.discord });
 
@@ -26,10 +18,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     var message = e.message.content
     var ok = false
     var arobase = false
-   // cosolee.message.author.username = "tjiho)
-	
-   // console.log(message.indexOf("<@424318724242407424>"),message)
-
+  
     if (message.substring(0, 1) == '~' || message.indexOf("<@424318724242407424>") > -1) 
     {
         if (message.substring(0, 1) == '~') 
@@ -41,48 +30,65 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 		    message = message.slice(22) 
             arobase = true
         }
-        // console.log(message) 
+        
         if(e.message.author.username == "Krysthalia")
         {
-            getRandomLine("random.txt",e)
+            Cmds["random"].action(message,(msg) => reply(e,msg),(msg) => send(e,msg))
+            setTimeout(() => execCmd(   
+                                message,
+                                (msg) => reply(e,msg),
+                                (msg) => send(e,msg),
+                                arobase,
+                                true
+                            ), 1500);  
         }
-        try
-        {
-            setTimeout(() => execCmd(message,arobase), 1500);            
-        }
-        catch(err)
-        {
-            console.log(err)
-            e.message.channel.sendMessage("un électron quantique a tout cassé : "+err)     
-        }
+        else
+            execCmd(
+                message,
+                (msg) => reply(e,msg),
+                (msg) => send(e,msg),
+                arobase,
+                false
+            )
+
+        
     }
 });
 
-function execCmd(message,arobase)
+function execCmd(message,f_reply,f_send,arobase,special)
 {
-    for(cmd_name in Cmds)
+    console.log("plop")
+    try
     {
-        if(Cmds[cmd_name].test(message))
+        for(cmd_name in Cmds)
         {
-            Cmds[cmd_name].action(message,(msg) => reply(e,msg),(msg) => send(e,msg))
-            return true
-        }    
-    }
-
-    for(cmd_name in Cmds_embed)
-    {
-        if(Cmds_embed[cmd_name].test(message))
+            if(Cmds[cmd_name].test(message))
+            {
+                Cmds[cmd_name].action(message,f_reply,f_send)
+                return true
+            }    
+        }
+    
+        for(cmd_name in Cmds_embed)
         {
-            Cmds_embed[cmd_name].action(message,(args) => embed(e,args))
-            return true
-        }    
+            if(Cmds_embed[cmd_name].test(message))
+            {
+                Cmds_embed[cmd_name].action(message,f_reply,f_send)
+                return true
+            }    
+        }
+    
+        if(! arobase)
+            Cmds["default"].action(message,f_reply,f_send)
+        else
+            Cmds["random"].action(message,f_reply,f_send)
     }
-
-    if(! arobase)
+    catch(err)
     {
-        console.log('plop')
-        Cmds["default"].action(message,(msg) => reply(e,msg),(msg) => send(e,msg))
+        console.log(err)
+        e.message.channel.sendMessage("un électron quantique a tout cassé : "+err)     
     }
+    
 }
 
 function reply(e,message)
