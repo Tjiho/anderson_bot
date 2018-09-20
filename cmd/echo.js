@@ -15,11 +15,10 @@ exports["action"] = function(message,f_reply,f_send,client)
         f_send("anderson ne dit rien")
 }
 
-exports["test"] = (message) => Check.checkCmd(message,["echo"])
-
+exports["test"] = (message) => Check.checkCmd(message,["say"]) || Check.checkCmd(message,["echo"]) || Check.checkCmd(message,["dit"]) || Check.checkCmd(message,["dis"]) 
 
 exports["help"] = 
 {
-    cmd:["echo"],
+    cmd:["echo || say"],
     help:"anderson parle"
 }
