@@ -3,7 +3,9 @@ const Check = require("../share/check")
 exports["action"] = function(message,f_reply,f_send,client)
 {
     forsomeone = message.indexOf("@")
-    if(forsomeone < 0)
+    me = message.indexOf("@424318724242407424>")
+    //console.log(forsomeone,me)
+    if(forsomeone < 0 || forsomeone == me)
         f_reply("hey")
     else
     {
@@ -18,6 +20,7 @@ exports["test"] = (message) => {
             Check.checkCmd(message,["bonjour"]) ||
             Check.checkCmd(message,["hej"]) ||
             Check.checkCmd(message,["hi"]) ||
+            Check.checkCmd(message,["salut"]) ||
             Check.checkCmd(message,["hello"])
 
 }
@@ -25,6 +28,6 @@ exports["test"] = (message) => {
 
 exports["help"] = 
 {
-    cmd:["hey | bonjour | hi | hello | hej"],
+    cmd:["hey | salut | bonjour | hi | hello | hej"],
     help:"anderson vous dit bonjour"
 }
