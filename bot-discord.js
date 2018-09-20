@@ -11,6 +11,10 @@ client.connect({ token: config.discord });
 
 client.Dispatcher.on(Events.GATEWAY_READY, e => {
   console.log("Connected as: " + client.User.username);
+
+client.User.setGame({type: 0, name: "Tourner en boucle"});
+
+
 });
 
 client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
@@ -19,7 +23,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     var ok = false
     var arobase = false
 
-    if (message.substring(0, 1) == '~' || message.indexOf("<@424318724242407424>") > -1) 
+    if (message.substring(0, 1) == '~' || message.indexOf("<@424318724242407424>") > -1 || message.indexOf("@anderson") > -1) 
     {
         if (message.substring(0, 1) == '~') 
 		message = message.slice(1)
@@ -31,7 +35,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
             arobase = true
         }
         
-        if(e.message.author.username == "Krysthalia")
+        if(e.message.author.username == "dKrysthalia")
         {
             Cmds["random"].action(message,(msg) => reply(e,msg),(msg) => send(e,msg))
             setTimeout(() => execCmd(   
@@ -83,6 +87,13 @@ function execCmd(message,f_reply,f_send,f_embed,arobase,special)
             Cmds["default"].action(message,f_reply,f_send)
         else
             Cmds["random"].action(message,f_reply,f_send)
+/*
+	const co = require('./cogite.js');
+console.log("toto");
+	if(message.toString()[1]!='>'){
+		//message = message.replace(","," ");
+		f_send("-"+co.cherchePattern(message));
+	}*/
     }
     catch(err)
     {
