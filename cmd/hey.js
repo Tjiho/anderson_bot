@@ -20,7 +20,9 @@ exports["test"] = (message) => {
             Check.checkCmd(message,["bonjour"]) ||
             Check.checkCmd(message,["hej"]) ||
             Check.checkCmd(message,["hi"]) ||
-            Check.checkCmd(message,["salut"]) ||
+            Check.checkCmd(message,["hey"]) ||
+	    Check.checkCmd(message,["salut"]) ||
+	    Check.checkCmd(message,["coucou"]) ||
             Check.checkCmd(message,["hello"])
 
 }
