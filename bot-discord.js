@@ -4,6 +4,7 @@ var client = new Discordie();
 const config = require("./static values/config")
 const Cmds = require("./cmd")
 const Cmds_embed = require("./cmd_discord")
+const Spam = require("./spam")
 
 
 
@@ -23,6 +24,14 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     var ok = false
     var arobase = false
 
+	execSpam(
+		message,
+		(msg) => reply(e,msg),
+		(msg) => send(e,msg),
+		(msg) => embed(e,msg),
+		false,
+		false
+	)
     if (message.substring(0, 1) == '~' || message.indexOf("<@424318724242407424>") > -1 || message.indexOf("@anderson") > -1) 
     {
         if (message.substring(0, 1) == '~') 
@@ -48,18 +57,56 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
                             ), 1500);  
         }
         else
-            execCmd(
-                message,
-                (msg) => reply(e,msg),
-                (msg) => send(e,msg),
-                (msg) => embed(e,msg),
-                arobase,
-                false
-            )
-
+	{
+		if(message.indexOf("figlet ") == 0)
+		{
+			message = message.slice(7)
+			console.log(message)	
+			execCmd(
+				message,
+				(msg) => reply(e,"!figlet " + msg),
+				(msg) => send(e,"!figlet " + msg),
+				(msg) => embed(e,"!figlet " + msg),
+				arobase,
+				false
+			)
+		}
+		else
+		    execCmd(
+			message,
+			(msg) => reply(e,msg),
+			(msg) => send(e,msg),
+			(msg) => embed(e,msg),
+			arobase,
+			false
+		    )
+	}
         
     }
 });
+
+
+
+function execSpam(message,f_reply,f_send,f_embed,arobase,special)
+{
+
+    try
+    {
+        for(cmd_name in Spam)
+        {
+            if(Spam[cmd_name].test(message))
+            {
+                Spam[cmd_name].action(message,f_reply,f_send,client)
+                return true
+            }    
+	}
+    }
+    catch(err)
+    {
+        console.log(err)
+        f_send("un électron quantique a tout cassé : "+err)     
+    }    
+}
 
 function execCmd(message,f_reply,f_send,f_embed,arobase,special)
 {
