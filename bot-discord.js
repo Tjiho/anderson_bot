@@ -6,6 +6,7 @@ const Cmds = require("./cmd")
 const Cmds_embed = require("./cmd_discord")
 const Spam = require("./spam")
 
+const Check = require("./share/check")
 
 
 client.connect({ token: config.discord });
@@ -23,7 +24,11 @@ client.Dispatcher.on(Events.MESSAGE_CREATE, e => {
     var message = e.message.content
     var ok = false
     var arobase = false
+    if(message == "azertyuiop")
+    {
+	e.message.delete()
 
+    }
 	execSpam(
 		message,
 		(msg) => reply(e,msg),
@@ -130,7 +135,7 @@ function execCmd(message,f_reply,f_send,f_embed,arobase,special)
             }    
         }
     
-        if(! arobase)
+        if(! arobase && Check.numberWords(message,3))
             Cmds["default"].action(message,f_reply,f_send)
         else
             Cmds["random"].action(message,f_reply,f_send)

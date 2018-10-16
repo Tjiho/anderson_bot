@@ -2,7 +2,7 @@ const Check = require("../share/check")
 
 exports["action"] = function(message,f_reply,f_send,client)
 {
-        f_send("Soleil !")
+        f_send("Soleil :sun_with_face: !")
 }
 
 exports["test"] = (message) => {

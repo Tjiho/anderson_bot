@@ -1,3 +1,5 @@
+const Check = require("../share/check")
+
 exports["action"] = function(message,f_reply,f_send,client)
 {
 
@@ -5,7 +7,7 @@ exports["action"] = function(message,f_reply,f_send,client)
     cmd = args[0]
     args = args.splice(1);
 
-    if(args.length > 0)
+    if(args.length > 0 && Check.numberWords(message,3))
     {
         if(cmd[cmd.length -1] == "e")
         {
