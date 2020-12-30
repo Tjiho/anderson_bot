@@ -65,12 +65,16 @@ function getRandomInt(max) {
 	console.log(args[1])
     	if(args.length > 1)
     	{
+		
 		//console.log(tumblr.oa)
-		performOauthQuery(tumblr.oa.get("http://api.tumblr.com/v2/tagged?tag="+args[1], tumblr.accessToken, tumblr.accessSecret), 
+		let i = 0;
+		let a = () =>  performOauthQuery(tumblr.oa.get("http://api.tumblr.com/v2/tagged?tag="+args[1], tumblr.accessToken, tumblr.accessSecret), 
 					{
         					expectedStatusCodes : [200]
 					},
-			function(err, json){
+					b
+		)
+		let b = function(err, json){
 				console.log(err)
 				//var randomm = getRandomInt(json.total_posts)
 				posts = shuffle(json)
@@ -81,11 +85,16 @@ function getRandomInt(max) {
 				if(photo)
 					f_send(photo[0].original_size.url)
 				else
-					f_send("plop")
+				{	
+					i++
+					if(i < 10)
+						a()
+				}
 				}
 				else
 					f_reply("sorry images not found")
-		});
+		}
+		a()
 		
 	}
 }
